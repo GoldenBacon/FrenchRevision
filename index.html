@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="manifest" href="manifest.json"><link rel="stylesheet" href="style.css"><title>French Quiz</title>
+</head><body>
+<header><button id="home">🇫🇷 French Quiz</button><span id="session">0 answered · 0% accuracy</span><button id="dark">🌙</button></header>
+<main>
+<section id="homeView" class="view">
+<h1>Choose a test</h1><p class="muted">Add tests in <code>tests.js</code>.</p><div id="tests" class="grid"></div>
+<div class="card"><h2>Leaderboard username</h2><p class="muted">Use 3–20 letters, numbers, or underscores.</p>
+<div class="row"><input id="username" maxlength="20" placeholder="FrenchFox"><button id="save" class="primary">Save</button></div><p id="nameMsg"></p></div>
+<div class="grid two"><button class="card nav" data-go="resultsView">📊 <b>Results</b><small>History and word accuracy</small></button>
+<button class="card nav" data-go="leaderboardView">🏆 <b>Leaderboards</b><small>Points and playtime</small></button></div>
+</section>
+
+<section id="modeView" class="view"><button class="back" data-go="homeView">← Tests</button><p id="testName" class="eyebrow"></p><h1>Choose a mode</h1><div id="modes" class="grid two"></div></section>
+
+<section id="quizView" class="view"><div class="quizbar"><button class="back" data-go="modeView">← Modes</button><span id="progress"></span><b id="points">0 pts</b></div>
+<div class="card quiz"><p id="modeLabel" class="eyebrow"></p><h2 id="question"></h2><div id="answers"></div><p id="feedback"></p><button id="next" class="primary full hidden">Next →</button></div></section>
+
+<section id="resultsView" class="view"><button class="back" data-go="homeView">← Home</button><h1>Results</h1><div id="summary" class="stats"></div><div class="card"><h2>Word accuracy</h2><div id="words"></div></div><button id="clear" class="danger">Clear local results</button></section>
+
+<section id="leaderboardView" class="view"><button class="back" data-go="homeView">← Home</button><h1>Leaderboards</h1>
+<div class="tabs"><button class="tab active" data-board="points">⭐ Points</button><button class="tab" data-board="playtime">⏱ Playtime</button></div>
+<div id="board" class="card"></div><p class="muted tiny">Configure Supabase for a real global leaderboard.</p></section>
+</main>
+<script src="tests.js"></script><script src="app.js"></script>
+</body></html>

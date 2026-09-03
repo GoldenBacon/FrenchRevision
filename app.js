@@ -1,0 +1,32 @@
+let currentTest,currentMode,quiz;
+const session={answered:0,correct:0,points:0,started:Date.now()};
+const MODES={multiple:["🔘","Multiple Choice","Pick the English meaning."],typing:["⌨️","Enter English","Type the English meaning."]};
+const $=x=>document.getElementById(x);
+const get=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}};
+const set=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+const norm=s=>s.toLowerCase().trim().replace(/[.,!?;:]/g,"").replace(/\s+/g," ");
+function view(id){document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));$(id).classList.add("active");scrollTo(0,0)}
+function esc(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+function updateSession(){$("session").textContent=`${session.answered} answered · ${session.answered?Math.round(session.correct/session.answered*100):0}% accuracy`}
+function statsWord(fr,ok){const s=get("wordStats",{});s[fr]??={attempts:0,correct:0};s[fr].attempts++;if(ok)s[fr].correct++;set("wordStats",s)}
+function renderTests(){$("tests").innerHTML=TESTS.map(t=>`<button class="card test" data-test="${t.id}"><h2>${esc(t.title)}</h2><span>${esc(t.description)}</span><small>${Object.keys(t.words).length} words</small></button>`).join("");document.querySelectorAll("[data-test]").forEach(b=>b.onclick=()=>{currentTest=TESTS.find(t=>t.id===b.dataset.test);$("testName").textContent=currentTest.title;renderModes();view("modeView")})}
+function renderModes(){$("modes").innerHTML=Object.entries(MODES).map(([id,x])=>`<button class="card mode" data-mode="${id}"><span>${x[0]}</span><b>${x[1]}</b><small>${x[2]}</small></button>`).join("");document.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>start(b.dataset.mode))}
+function start(mode){currentMode=mode;quiz={items:Object.entries(currentTest.words).sort(()=>Math.random()-.5),i:0,points:0};view("quizView");renderQ()}
+function choices(correct){return [correct,...Object.values(currentTest.words).filter(x=>x!==correct).sort(()=>Math.random()-.5).slice(0,3)].sort(()=>Math.random()-.5)}
+function renderQ(){const [fr,en]=quiz.items[quiz.i];$("progress").textContent=`${quiz.i+1}/${quiz.items.length}`;$("points").textContent=`${quiz.points} pts`;$("modeLabel").textContent=MODES[currentMode][1];$("question").textContent=fr;$("feedback").textContent="";$("next").classList.add("hidden");$("next").classList.remove("answered");
+if(currentMode==="multiple"){$("answers").innerHTML=choices(en).map(a=>`<button class="answer" data-a="${esc(a)}">${esc(a)}</button>`).join("");document.querySelectorAll(".answer").forEach(b=>b.onclick=()=>answer(b.dataset.a,en,fr,b))}
+else{$("answers").innerHTML=`<div class="row"><input id="typing" placeholder="English meaning" autocomplete="off"><button id="check" class="primary">Check</button></div>`;$("typing").focus();$("check").onclick=()=>answer($("typing").value,en,fr);$("typing").onkeydown=e=>{if(e.key==="Enter")$("check").click()}}}
+function answer(given,en,fr,clicked){if($("next").classList.contains("answered"))return;const ok=norm(given)===norm(en);session.answered++;if(ok){session.correct++;session.points+=10;quiz.points+=10}statsWord(fr,ok);updateSession();if(clicked){document.querySelectorAll(".answer").forEach(b=>{b.disabled=true;if(norm(b.dataset.a)===norm(en))b.classList.add("correct")});if(!ok)clicked.classList.add("wrong")}$("feedback").textContent=ok?"+10 points — Correct!":`Answer: ${en}`;$("feedback").style.color=ok?"var(--good)":"var(--bad)";$("next").classList.remove("hidden");$("next").classList.add("answered");$("next").onclick=next}
+function next(){quiz.i++;if(quiz.i>=quiz.items.length)finish();else renderQ()}
+function finish(){const seconds=Math.round((Date.now()-quiz.started)/1000);const r=get("results",[]);r.unshift({test:currentTest.title,mode:MODES[currentMode][1],points:quiz.points,seconds,date:new Date().toISOString()});set("results",r.slice(0,100));renderResults();view("resultsView")}
+function time(s){return s>=3600?`${Math.floor(s/3600)}h ${Math.floor(s%3600/60)}m`:s>=60?`${Math.floor(s/60)}m ${s%60}s`:`${s}s`}
+function renderResults(){const r=get("results",[]),w=get("wordStats",{}),a=Object.values(w).reduce((n,x)=>n+x.attempts,0),c=Object.values(w).reduce((n,x)=>n+x.correct,0);$("summary").innerHTML=[[r.reduce((n,x)=>n+x.points,0),"Lifetime points"],[time(r.reduce((n,x)=>n+x.seconds,0)),"Playtime"],[a?Math.round(c/a*100):0+"%","Word accuracy"],[a,"Word attempts"]].map(x=>`<div class="stat"><b>${x[0]}</b><small>${x[1]}</small></div>`).join("");$("words").innerHTML=Object.entries(w).sort((a,b)=>b[1].attempts-a[1].attempts).map(([x,s])=>`<div class="word"><span>${esc(x)}<small><br>${s.correct}/${s.attempts} correct</small></span><b>${Math.round(s.correct/s.attempts*100)}%</b></div>`).join("")||"<p class='muted'>No attempts yet.</p>"}
+function renderBoard(type){const x=get("demoBoard",[]).sort((a,b)=>type==="points"?b.points-a.points:b.seconds-a.seconds);$("board").innerHTML=x.length?x.slice(0,20).map((u,i)=>`<div class="rank"><b>#${i+1}</b><b>${esc(u.username)}</b><b>${type==="points"?u.points+" pts":time(u.seconds)}</b></div>`).join(""):"<p class='muted'>Connect a backend for a global leaderboard.</p>"}
+renderTests();renderResults();updateSession();
+$("dark").onclick=()=>{document.documentElement.classList.toggle("dark");localStorage.setItem("dark",document.documentElement.classList.contains("dark")?"1":"0")};
+if(localStorage.getItem("dark")==="1")document.documentElement.classList.add("dark");
+document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>view(b.dataset.go));$("home").onclick=()=>view("homeView");
+$("username").value=localStorage.getItem("username")||"";$("save").onclick=()=>{const n=$("username").value.trim();if(!/^[A-Za-z0-9_]{3,20}$/.test(n)){$("nameMsg").textContent="Invalid username.";return}localStorage.setItem("username",n);$("nameMsg").textContent=`Saved as ${n}.`};
+$("clear").onclick=()=>{if(confirm("Clear local results?")){localStorage.removeItem("results");localStorage.removeItem("wordStats");renderResults()}};
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));b.classList.add("active");renderBoard(b.dataset.board)});
+renderBoard("points");
