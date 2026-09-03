@@ -1,6 +1,6 @@
 // ADD A TEST BY COPYING THIS OBJECT AND ADDING IT TO TESTS.
 const TESTS = [
-  {id:"french-core",title:"French Core Vocabulary",description:"Everyday adjectives and expressions.",words:{
+  {id:"french-core",title:"Opinions & Feelings Test A",description:"Opinion Adjectives",words:{
     "bruit, bruyant(e)":"noise/noisy","cher, chère":"expensive","courant(e)":"current/common",
     "(des)agréable":"(un)pleasant","divers":"varied/diverse","drôle":"funny","dur":"hard",
     "efficace":"efficient/effective","égal(e)":"equal","embêtant(e)":"annoying","équilibré":"balanced",
