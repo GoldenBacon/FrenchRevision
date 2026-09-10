@@ -1,129 +1,405 @@
-let currentTest,currentMode,quiz;
+const SUPABASE_URL = "https://aoabqbdazcabwyiyfpbs.supabase.co";
+const SUPABASE_KEY = "sb_publishable_mpTrg2TsXLKKtEnNas6H-g_pSTDJX7C";
 
-const session={
-  answered:0,
-  correct:0,
-  points:0,
-  started:Date.now(),
-  wordStats:{}
+const supabase = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+let currentTest;
+let currentMode;
+let quiz;
+let currentUser = null;
+let currentProfile = null;
+
+const session = {
+  answered: 0,
+  correct: 0,
+  points: 0,
+  started: Date.now(),
+  wordStats: {}
 };
 
-const MODES={
-  multiple:["🔘","Multiple Choice","Pick the English meaning."],
-  typing:["⌨️","Enter English","Type the English meaning."]
+const MODES = {
+  multiple: [
+    "🔘",
+    "Multiple Choice",
+    "Pick the English meaning."
+  ],
+  typing: [
+    "⌨️",
+    "Enter English",
+    "Type the English meaning."
+  ]
 };
 
-const $=x=>document.getElementById(x);
+const $ = id => document.getElementById(id);
 
-const get=(k,d)=>{
-  try{return JSON.parse(localStorage.getItem(k))??d}
-  catch{return d}
+const get = (key, fallback) => {
+  try {
+    return JSON.parse(localStorage.getItem(key)) ?? fallback;
+  } catch {
+    return fallback;
+  }
 };
 
-const set=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+const set = (key, value) =>
+  localStorage.setItem(key, JSON.stringify(value));
 
-const norm=s=>String(s??"")
-  .toLowerCase()
-  .trim()
-  .replace(/[.,!?;:]/g,"")
-  .replace(/\s+/g," ");
+const norm = value =>
+  String(value ?? "")
+    .toLowerCase()
+    .trim()
+    .replace(/[.,!?;:]/g, "")
+    .replace(/\s+/g, " ");
 
-const acceptedAnswers=s=>
-  String(s??"")
+const acceptedAnswers = value =>
+  String(value ?? "")
     .split("/")
     .map(norm)
     .filter(Boolean);
 
-const isCorrect=(given,expected)=>
+const isCorrect = (given, expected) =>
   acceptedAnswers(expected).includes(norm(given));
 
-function view(id){
-  document.querySelectorAll(".view")
-    .forEach(x=>x.classList.remove("active"));
-
-  $(id).classList.add("active");
-  scrollTo(0,0);
-}
-
-function esc(s){
-  return String(s).replace(/[&<>"']/g,c=>({
-    "&":"&amp;",
-    "<":"&lt;",
-    ">":"&gt;",
-    '"':"&quot;",
-    "'":"&#039;"
+function esc(value) {
+  return String(value).replace(/[&<>"']/g, c => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
   }[c]));
 }
 
-function updateSession(){
-  $("session").textContent=
+function view(id) {
+  document
+    .querySelectorAll(".view")
+    .forEach(x => x.classList.remove("active"));
+
+  $(id)?.classList.add("active");
+
+  scrollTo(0, 0);
+}
+
+function updateSession() {
+  $("session").textContent =
     `${session.answered} answered · ${
       session.answered
-        ? Math.round(session.correct/session.answered*100)
+        ? Math.round(
+            session.correct / session.answered * 100
+          )
         : 0
     }% accuracy`;
 }
 
-function statsWord(fr,ok){
 
-  session.wordStats[fr]??={
-    attempts:0,
-    correct:0
+/* =========================
+   AUTHENTICATION
+========================= */
+
+async function checkAuth() {
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
+
+  currentUser = user;
+
+  if (!user) {
+    showLogin();
+    return;
+  }
+
+  await loadProfile();
+}
+
+async function loadProfile() {
+  if (!currentUser) return;
+
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("id, username")
+    .eq("id", currentUser.id)
+    .single();
+
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  currentProfile = data;
+
+  if ($("currentUsername")) {
+    $("currentUsername").textContent = data.username;
+  }
+
+  if ($("settingsUsername")) {
+    $("settingsUsername").textContent = data.username;
+  }
+
+  if ($("settingsEmail")) {
+    $("settingsEmail").textContent =
+      currentUser.email || "—";
+  }
+
+  view("homeView");
+}
+
+function showLogin() {
+  view("loginView");
+}
+
+function showSignup() {
+  view("signupView");
+}
+
+async function login() {
+  const email = $("loginEmail").value.trim();
+  const password = $("loginPassword").value;
+
+  $("loginMsg").textContent = "";
+
+  if (!email || !password) {
+    $("loginMsg").textContent =
+      "Please enter your email and password.";
+    return;
+  }
+
+  const { error } =
+    await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+
+  if (error) {
+    $("loginMsg").textContent = error.message;
+    return;
+  }
+
+  $("loginMsg").textContent = "Logged in!";
+
+  await checkAuth();
+}
+
+async function signup() {
+  const username =
+    $("signupUsername").value.trim();
+
+  const email =
+    $("signupEmail").value.trim();
+
+  const password =
+    $("signupPassword").value;
+
+  const password2 =
+    $("signupPassword2").value;
+
+  $("signupMsg").textContent = "";
+
+  if (!/^[A-Za-z0-9_]{3,20}$/.test(username)) {
+    $("signupMsg").textContent =
+      "Username must be 3–20 characters using letters, numbers or underscores.";
+    return;
+  }
+
+  if (!email) {
+    $("signupMsg").textContent =
+      "Please enter an email address.";
+    return;
+  }
+
+  if (password.length < 6) {
+    $("signupMsg").textContent =
+      "Password must be at least 6 characters.";
+    return;
+  }
+
+  if (password !== password2) {
+    $("signupMsg").textContent =
+      "Passwords do not match.";
+    return;
+  }
+
+  /*
+    Check username first.
+    The database also has a UNIQUE constraint,
+    so two people cannot claim the same username.
+  */
+
+  const { data: existing } = await supabase
+    .from("profiles")
+    .select("id")
+    .ilike("username", username)
+    .limit(1);
+
+  if (existing?.length) {
+    $("signupMsg").textContent =
+      "That username is already taken.";
+    return;
+  }
+
+  const {
+    data,
+    error
+  } = await supabase.auth.signUp({
+    email,
+    password
+  });
+
+  if (error) {
+    $("signupMsg").textContent =
+      error.message;
+    return;
+  }
+
+  if (!data.user) {
+    $("signupMsg").textContent =
+      "Account created. Check your email to continue.";
+    return;
+  }
+
+  /*
+    Create the permanent profile.
+  */
+
+  const {
+    error: profileError
+  } = await supabase
+    .from("profiles")
+    .insert({
+      id: data.user.id,
+      username
+    });
+
+  if (profileError) {
+    $("signupMsg").textContent =
+      profileError.code === "23505"
+        ? "That username is already taken."
+        : profileError.message;
+
+    return;
+  }
+
+  if (!data.session) {
+    $("signupMsg").textContent =
+      "Account created! Check your email to confirm your account, then log in.";
+
+    return;
+  }
+
+  currentUser = data.user;
+
+  await loadProfile();
+}
+
+async function logout() {
+  await supabase.auth.signOut();
+
+  currentUser = null;
+  currentProfile = null;
+
+  showLogin();
+}
+
+
+/* =========================
+   VOCABULARY STATS
+========================= */
+
+function statsWord(fr, ok) {
+  session.wordStats[fr] ??= {
+    attempts: 0,
+    correct: 0
   };
 
   session.wordStats[fr].attempts++;
 
-  if(ok)
+  if (ok) {
     session.wordStats[fr].correct++;
+  }
 
-  const s=get("wordStats",{});
+  const stats = get("wordStats", {});
 
-  s[fr]??={
-    attempts:0,
-    correct:0
+  stats[fr] ??= {
+    attempts: 0,
+    correct: 0
   };
 
-  s[fr].attempts++;
+  stats[fr].attempts++;
 
-  if(ok)
-    s[fr].correct++;
+  if (ok) {
+    stats[fr].correct++;
+  }
 
-  set("wordStats",s);
+  set("wordStats", stats);
 }
 
-function renderTests(){
 
-  $("tests").innerHTML=TESTS.map(t=>`
-    <button class="card test" data-test="${t.id}">
-      <h2>${esc(t.title)}</h2>
-      <span>${esc(t.description)}</span>
-      <small>${Object.keys(t.words).length} words</small>
+/* =========================
+   TEST SELECTION
+========================= */
+
+function renderTests() {
+  $("tests").innerHTML = TESTS.map(test => `
+    <button
+      class="card test"
+      data-test="${esc(test.id)}">
+
+      <h2>${esc(test.title)}</h2>
+
+      <span>
+        ${esc(test.description)}
+      </span>
+
+      <small>
+        ${Object.keys(test.words).length} words
+      </small>
+
     </button>
   `).join("");
 
-  document.querySelectorAll("[data-test]").forEach(b=>{
+  document
+    .querySelectorAll("[data-test]")
+    .forEach(button => {
+      button.onclick = () => {
 
-    b.onclick=()=>{
-      currentTest=TESTS.find(t=>t.id===b.dataset.test);
+        currentTest =
+          TESTS.find(
+            test =>
+              test.id === button.dataset.test
+          );
 
-      $("testName").textContent=currentTest.title;
+        $("testName").textContent =
+          currentTest.title;
 
-      renderModes();
+        renderModes();
 
-      view("modeView");
-    };
-
-  });
+        view("modeView");
+      };
+    });
 }
 
-function renderModes(){
 
-  const n=Object.keys(currentTest.words).length;
+/* =========================
+   GAME MODES
+========================= */
 
-  const counts=[10,20,30,"all"]
-    .filter(x=>x==="all"||x<=n);
+function renderModes() {
+  const wordCount =
+    Object.keys(currentTest.words).length;
 
-  $("modes").innerHTML=`
+  const counts = [
+    10,
+    20,
+    30,
+    "all"
+  ].filter(
+    count =>
+      count === "all" ||
+      count <= wordCount
+  );
+
+  $("modes").innerHTML = `
 
     <div class="choice-panel">
 
@@ -131,11 +407,19 @@ function renderModes(){
 
       <div class="count-buttons">
 
-        ${counts.map(x=>`
+        ${counts.map(count => `
           <button
-            class="count ${x==="all"?"selected":""}"
-            data-count="${x}">
-            ${x==="all"?"All":x}
+            class="count ${
+              count === "all"
+                ? "selected"
+                : ""
+            }"
+            data-count="${count}">
+
+            ${count === "all"
+              ? "All"
+              : count}
+
           </button>
         `).join("")}
 
@@ -143,176 +427,220 @@ function renderModes(){
 
     </div>
 
-    ${Object.entries(MODES).map(([id,x])=>`
+    ${Object.entries(MODES).map(
+      ([id, mode]) => `
+        <button
+          class="card mode"
+          data-mode="${id}">
 
-      <button class="card mode" data-mode="${id}">
-        <span>${x[0]}</span>
-        <b>${x[1]}</b>
-        <small>${x[2]}</small>
-      </button>
+          <span>${mode[0]}</span>
 
-    `).join("")}
+          <b>${mode[1]}</b>
 
-    <button class="secondary mistakes" id="mistakes">
+          <small>${mode[2]}</small>
+
+        </button>
+      `
+    ).join("")}
+
+    <button
+      class="secondary mistakes"
+      id="mistakes">
+
       🎯 Practice Mistakes
+
     </button>
   `;
 
-  document.querySelectorAll(".count").forEach(b=>{
+  document
+    .querySelectorAll(".count")
+    .forEach(button => {
+      button.onclick = () => {
 
-    b.onclick=()=>{
+        document
+          .querySelectorAll(".count")
+          .forEach(x =>
+            x.classList.remove("selected")
+          );
 
-      document.querySelectorAll(".count")
-        .forEach(x=>x.classList.remove("selected"));
+        button.classList.add("selected");
+      };
+    });
 
-      b.classList.add("selected");
-    };
+  document
+    .querySelectorAll("[data-mode]")
+    .forEach(button => {
+      button.onclick = () =>
+        start(
+          button.dataset.mode,
+          selectedCount()
+        );
+    });
 
-  });
-
-  document.querySelectorAll("[data-mode]").forEach(b=>{
-    b.onclick=()=>start(
-      b.dataset.mode,
-      selectedCount()
-    );
-  });
-
-  $("mistakes").onclick=startMistakes;
+  $("mistakes").onclick =
+    startMistakes;
 }
 
-function selectedCount(){
+function selectedCount() {
+  const button =
+    document.querySelector(".count.selected");
 
-  const b=document.querySelector(".count.selected");
-
-  return b ? b.dataset.count : "all";
+  return button
+    ? button.dataset.count
+    : "all";
 }
 
-function shuffled(a){
-  return [...a].sort(()=>Math.random()-.5);
-}
-
-function start(mode,count="all"){
-
-  currentMode=mode;
-
-  let items=shuffled(
-    Object.entries(currentTest.words)
+function shuffled(array) {
+  return [...array].sort(
+    () => Math.random() - 0.5
   );
+}
 
-  if(count!=="all")
-    items=items.slice(0,Number(count));
 
-  quiz={
+/* =========================
+   START QUIZ
+========================= */
+
+function start(mode, count = "all") {
+  currentMode = mode;
+
+  let items =
+    shuffled(
+      Object.entries(currentTest.words)
+    );
+
+  if (count !== "all") {
+    items =
+      items.slice(0, Number(count));
+  }
+
+  quiz = {
     items,
-    i:0,
-    points:0,
-    streak:0,
-    bestStreak:0,
-    started:Date.now(),
-    mistakes:[]
+    i: 0,
+    points: 0,
+    streak: 0,
+    bestStreak: 0,
+    started: Date.now(),
+    mistakes: []
   };
 
   view("quizView");
-
   renderQ();
 }
 
-function startMistakes(){
+function startMistakes() {
+  const stats =
+    get("wordStats", {});
 
-  const stats=get("wordStats",{});
+  const items =
+    Object.entries(currentTest.words)
+      .filter(([fr]) =>
+        stats[fr] &&
+        stats[fr].attempts > 0 &&
+        stats[fr].correct <
+          stats[fr].attempts
+      );
 
-  const items=Object.entries(currentTest.words)
-    .filter(([fr])=>
-      stats[fr] &&
-      stats[fr].attempts>0 &&
-      stats[fr].correct<stats[fr].attempts
+  if (!items.length) {
+    alert(
+      "No mistakes yet for this test!"
     );
-
-  if(!items.length){
-    alert("No mistakes yet for this test!");
     return;
   }
 
-  currentMode="typing";
+  currentMode = "typing";
 
-  quiz={
-    items:shuffled(items),
-    i:0,
-    points:0,
-    streak:0,
-    bestStreak:0,
-    started:Date.now(),
-    mistakes:[]
+  quiz = {
+    items: shuffled(items),
+    i: 0,
+    points: 0,
+    streak: 0,
+    bestStreak: 0,
+    started: Date.now(),
+    mistakes: []
   };
 
   view("quizView");
-
   renderQ();
 }
 
-function choices(correct){
 
+/* =========================
+   QUESTIONS
+========================= */
+
+function choices(correct) {
   return [
     correct,
+
     ...Object.values(currentTest.words)
-      .filter(x=>x!==correct)
-      .sort(()=>Math.random()-.5)
-      .slice(0,3)
-  ].sort(()=>Math.random()-.5);
+      .filter(x => x !== correct)
+      .sort(
+        () => Math.random() - 0.5
+      )
+      .slice(0, 3)
+
+  ].sort(
+    () => Math.random() - 0.5
+  );
 }
 
-function renderQ(){
+function renderQ() {
+  const [fr, en] =
+    quiz.items[quiz.i];
 
-  const [fr,en]=quiz.items[quiz.i];
+  $("progress").textContent =
+    `${quiz.i + 1}/${quiz.items.length}`;
 
-  $("progress").textContent=
-    `${quiz.i+1}/${quiz.items.length}`;
-
-  $("points").textContent=
+  $("points").textContent =
     `${quiz.points} pts`;
 
-  $("modeLabel").textContent=
+  $("modeLabel").textContent =
     MODES[currentMode][1];
 
-  $("question").textContent=fr;
+  $("question").textContent =
+    fr;
 
-  $("feedback").textContent="";
+  $("feedback").textContent = "";
 
   $("next").classList.add("hidden");
-
   $("next").classList.remove("answered");
 
-  if($("streak"))
-    $("streak").textContent=`🔥 ${quiz.streak}`;
+  $("streak").textContent =
+    `🔥 ${quiz.streak}`;
 
-  if(currentMode==="multiple"){
+  if (currentMode === "multiple") {
 
-    $("answers").innerHTML=
-      choices(en).map(a=>`
+    $("answers").innerHTML =
+      choices(en)
+        .map(answer => `
+          <button
+            class="answer"
+            data-a="${esc(answer)}">
 
-        <button
-          class="answer"
-          data-a="${esc(a)}">
-          ${esc(a)}
-        </button>
+            ${esc(answer)}
 
-      `).join("");
+          </button>
+        `)
+        .join("");
 
-    document.querySelectorAll(".answer").forEach(b=>{
+    document
+      .querySelectorAll(".answer")
+      .forEach(button => {
 
-      b.onclick=()=>
-        answer(
-          b.dataset.a,
-          en,
-          fr,
-          b
-        );
+        button.onclick = () =>
+          answer(
+            button.dataset.a,
+            en,
+            fr,
+            button
+          );
 
-    });
+      });
 
-  }else{
+  } else {
 
-    $("answers").innerHTML=`
+    $("answers").innerHTML = `
 
       <div class="row">
 
@@ -321,8 +649,12 @@ function renderQ(){
           placeholder="English meaning"
           autocomplete="off">
 
-        <button id="check" class="primary">
+        <button
+          id="check"
+          class="primary">
+
           Check
+
         </button>
 
       </div>
@@ -330,179 +662,283 @@ function renderQ(){
 
     $("typing").focus();
 
-    $("check").onclick=()=>
-      answer(
-        $("typing").value,
-        en,
-        fr
-      );
+    $("check").onclick =
+      () =>
+        answer(
+          $("typing").value,
+          en,
+          fr
+        );
 
-    $("typing").onkeydown=e=>{
-      if(e.key==="Enter")
-        $("check").click();
-    };
+    $("typing").onkeydown =
+      event => {
+        if (event.key === "Enter") {
+          $("check").click();
+        }
+      };
   }
 }
 
-function answer(given,en,fr,clicked){
 
-  if($("next").classList.contains("answered"))
+/* =========================
+   ANSWER
+========================= */
+
+function answer(
+  given,
+  en,
+  fr,
+  clicked
+) {
+  if (
+    $("next").classList.contains(
+      "answered"
+    )
+  ) {
     return;
+  }
 
-  const ok=isCorrect(given,en);
+  const ok =
+    isCorrect(given, en);
 
   session.answered++;
 
-  let earned=0;
+  let earned = 0;
 
-  if(ok){
+  if (ok) {
 
     session.correct++;
 
-    earned=
-      10+
-      Math.min(quiz.streak,5)*2;
+    earned =
+      10 +
+      Math.min(
+        quiz.streak,
+        5
+      ) * 2;
 
-    session.points+=earned;
-
-    quiz.points+=earned;
+    session.points += earned;
+    quiz.points += earned;
 
     quiz.streak++;
 
-    quiz.bestStreak=
+    quiz.bestStreak =
       Math.max(
         quiz.bestStreak,
         quiz.streak
       );
 
-  }else{
+  } else {
 
-    quiz.streak=0;
+    quiz.streak = 0;
 
     quiz.mistakes.push(fr);
   }
 
-  statsWord(fr,ok);
+  statsWord(fr, ok);
 
   updateSession();
 
-  if(clicked){
+  if (clicked) {
 
-    document.querySelectorAll(".answer")
-      .forEach(b=>{
+    document
+      .querySelectorAll(".answer")
+      .forEach(button => {
 
-        b.disabled=true;
+        button.disabled = true;
 
-        if(
+        if (
           acceptedAnswers(en)
-            .includes(norm(b.dataset.a))
-        ){
-          b.classList.add("correct");
+            .includes(
+              norm(
+                button.dataset.a
+              )
+            )
+        ) {
+          button.classList.add(
+            "correct"
+          );
         }
 
       });
 
-    if(!ok)
-      clicked.classList.add("wrong");
+    if (!ok) {
+      clicked.classList.add(
+        "wrong"
+      );
+    }
   }
 
-  $("feedback").textContent=
+  $("feedback").textContent =
     ok
       ? `+${earned} points — Correct!`
       : `Answer: ${en}`;
 
-  $("feedback").style.color=
+  $("feedback").style.color =
     ok
       ? "var(--good)"
       : "var(--bad)";
 
-  $("next").classList.remove("hidden");
-
-  $("next").classList.add("answered");
-
-  $("next").onclick=next;
-}
-
-function next(){
-
-  quiz.i++;
-
-  if(quiz.i>=quiz.items.length)
-    finish();
-  else
-    renderQ();
-}
-
-function finish(){
-
-  const seconds=Math.max(
-    1,
-    Math.round(
-      (Date.now()-quiz.started)/1000
-    )
+  $("next").classList.remove(
+    "hidden"
   );
 
-  const correct=
-    quiz.items.length-
+  $("next").classList.add(
+    "answered"
+  );
+
+  $("next").onclick = next;
+}
+
+function next() {
+  quiz.i++;
+
+  if (
+    quiz.i >= quiz.items.length
+  ) {
+    finish();
+  } else {
+    renderQ();
+  }
+}
+
+
+/* =========================
+   FINISH QUIZ
+========================= */
+
+async function finish() {
+  const seconds =
+    Math.max(
+      1,
+      Math.round(
+        (Date.now() -
+          quiz.started) /
+          1000
+      )
+    );
+
+  const correct =
+    quiz.items.length -
     quiz.mistakes.length;
 
-  const result={
-    test:currentTest.title,
-    mode:MODES[currentMode][1],
-    questions:quiz.items.length,
+  const result = {
+    test: currentTest.title,
+    mode: MODES[currentMode][1],
+    questions: quiz.items.length,
     correct,
-    points:quiz.points,
+    points: quiz.points,
     seconds,
-    bestStreak:quiz.bestStreak,
-    mistakes:quiz.mistakes,
-    date:new Date().toISOString()
+    bestStreak: quiz.bestStreak,
+    mistakes: quiz.mistakes,
+    date: new Date().toISOString()
   };
 
-  const r=get("results",[]);
+  const results =
+    get("results", []);
 
-  r.unshift(result);
+  results.unshift(result);
 
   set(
     "results",
-    r.slice(0,100)
+    results.slice(0, 100)
   );
+
+  /*
+    Submit the result to Supabase.
+    The database will associate it with
+    the authenticated user.
+  */
+
+  await submitScore(result);
 
   renderResults(result);
 
   view("resultsView");
 }
 
-function time(s){
 
-  return s>=3600
-    ? `${Math.floor(s/3600)}h ${Math.floor(s%3600/60)}m`
-    : s>=60
-      ? `${Math.floor(s/60)}m ${s%60}s`
-      : `${s}s`;
+/* =========================
+   ONLINE SCORE
+========================= */
+
+async function submitScore(result) {
+  if (!currentUser) {
+    return;
+  }
+
+  const {
+    error
+  } = await supabase
+    .from("quiz_scores")
+    .insert({
+      user_id: currentUser.id,
+      username: currentProfile?.username,
+      points: result.points,
+      seconds: result.seconds,
+      questions: result.questions,
+      correct: result.correct,
+      test: result.test,
+      mode: result.mode
+    });
+
+  if (error) {
+    console.error(
+      "Could not submit score:",
+      error
+    );
+  }
 }
 
-function renderResults(last){
 
-  const r=get("results",[]);
+/* =========================
+   RESULTS
+========================= */
 
-  const w=get("wordStats",{});
+function time(seconds) {
+  return seconds >= 3600
+    ? `${Math.floor(seconds / 3600)}h ${
+        Math.floor(
+          seconds % 3600 / 60
+        )
+      }m`
 
-  const a=Object.values(w)
-    .reduce(
-      (n,x)=>n+x.attempts,
-      0
-    );
+    : seconds >= 60
+      ? `${Math.floor(seconds / 60)}m ${
+          seconds % 60
+        }s`
 
-  const c=Object.values(w)
-    .reduce(
-      (n,x)=>n+x.correct,
-      0
-    );
+      : `${seconds}s`;
+}
 
-  $("summary").innerHTML=[
+function renderResults(last) {
+  const results =
+    get("results", []);
+
+  const words =
+    get("wordStats", {});
+
+  const attempts =
+    Object.values(words)
+      .reduce(
+        (n, x) =>
+          n + x.attempts,
+        0
+      );
+
+  const correct =
+    Object.values(words)
+      .reduce(
+        (n, x) =>
+          n + x.correct,
+        0
+      );
+
+  $("summary").innerHTML = [
 
     [
-      last ? last.points : 0,
+      last
+        ? last.points
+        : 0,
       "Last score"
     ],
 
@@ -528,208 +964,422 @@ function renderResults(last){
     ],
 
     [
-      a
-        ? Math.round(c/a*100)+"%"
+      attempts
+        ? Math.round(
+            correct /
+            attempts *
+            100
+          ) + "%"
         : "0%",
-      "Lifetime word accuracy"
+      "Word accuracy"
     ],
 
     [
-      a,
+      attempts,
       "Word attempts"
     ]
 
-  ].map(x=>`
+  ]
+    .map(
+      item => `
+        <div class="stat">
+          <b>${item[0]}</b>
+          <small>${item[1]}</small>
+        </div>
+      `
+    )
+    .join("");
 
-    <div class="stat">
-      <b>${x[0]}</b>
-      <small>${x[1]}</small>
-    </div>
-
-  `).join("");
-
-  $("words").innerHTML=
-    Object.entries(w)
+  $("words").innerHTML =
+    Object.entries(words)
       .sort(
-        (a,b)=>
-          b[1].attempts-
+        (a, b) =>
+          b[1].attempts -
           a[1].attempts
       )
-      .map(([x,s])=>`
+      .map(
+        ([word, stats]) => `
+          <div class="word">
 
-        <div class="word">
+            <span>
+              ${esc(word)}
 
-          <span>
-            ${esc(x)}
+              <small>
+                <br>
+                ${stats.correct}/${stats.attempts}
+                correct
+              </small>
+            </span>
 
-            <small>
-              <br>
-              ${s.correct}/${s.attempts}
-              correct
-            </small>
-          </span>
+            <b>
+              ${Math.round(
+                stats.correct /
+                stats.attempts *
+                100
+              )}%
+            </b>
 
-          <b>
-            ${Math.round(
-              s.correct/s.attempts*100
-            )}%
-          </b>
-
-        </div>
-
-      `)
+          </div>
+        `
+      )
       .join("")
       ||
       "<p class='muted'>No attempts yet.</p>";
 
-  if($("mistakesList")){
+  if ($("mistakesList")) {
 
-    $("mistakesList").innerHTML=
+    $("mistakesList").innerHTML =
       last &&
       last.mistakes.length
 
         ? `
-
-          <h3>Words to practice</h3>
+          <h3>Words to practise</h3>
 
           ${
-            [...new Set(last.mistakes)]
-              .map(x=>`
-
-                <div class="word">
-                  <span>${esc(x)}</span>
-                </div>
-
-              `)
+            [
+              ...new Set(
+                last.mistakes
+              )
+            ]
+              .map(
+                word => `
+                  <div class="word">
+                    <span>
+                      ${esc(word)}
+                    </span>
+                  </div>
+                `
+              )
               .join("")
           }
-
         `
 
         : "";
   }
 }
 
-function renderBoard(type){
 
-  const x=get("demoBoard",[])
-    .sort((a,b)=>
-      type==="points"
-        ? b.points-a.points
-        : b.seconds-a.seconds
-    );
+/* =========================
+   GLOBAL LEADERBOARD
+========================= */
 
-  $("board").innerHTML=
-    x.length
+async function renderBoard(type) {
 
-      ? x.slice(0,20)
-        .map((u,i)=>`
+  $("board").innerHTML =
+    "<p class='muted'>Loading leaderboard...</p>";
 
+  const column =
+    type === "points"
+      ? "points"
+      : "seconds";
+
+  const {
+    data,
+    error
+  } = await supabase
+    .from("quiz_scores")
+    .select(
+      "username, points, seconds"
+    )
+    .order(
+      column,
+      { ascending: false }
+    )
+    .limit(20);
+
+  if (error) {
+
+    console.error(error);
+
+    $("board").innerHTML =
+      `
+        <p class="muted">
+          Could not load leaderboard.
+        </p>
+      `;
+
+    return;
+  }
+
+  if (!data.length) {
+
+    $("board").innerHTML =
+      `
+        <p class="muted">
+          No scores yet. Be the first!
+        </p>
+      `;
+
+    return;
+  }
+
+  /*
+    For points, a player can have multiple
+    scores, so combine their scores first.
+  */
+
+  let leaderboard = data;
+
+  if (type === "points") {
+
+    const totals = {};
+
+    data.forEach(row => {
+
+      totals[row.username] ??= 0;
+
+      totals[row.username] +=
+        row.points;
+
+    });
+
+    leaderboard =
+      Object.entries(totals)
+        .map(
+          ([username, points]) => ({
+            username,
+            points
+          })
+        )
+        .sort(
+          (a, b) =>
+            b.points -
+            a.points
+        )
+        .slice(0, 20);
+
+  } else {
+
+    const totals = {};
+
+    data.forEach(row => {
+
+      totals[row.username] ??= 0;
+
+      totals[row.username] +=
+        row.seconds;
+
+    });
+
+    leaderboard =
+      Object.entries(totals)
+        .map(
+          ([username, seconds]) => ({
+            username,
+            seconds
+          })
+        )
+        .sort(
+          (a, b) =>
+            b.seconds -
+            a.seconds
+        )
+        .slice(0, 20);
+  }
+
+  $("board").innerHTML =
+    leaderboard
+      .map(
+        (user, index) => `
           <div class="rank">
 
-            <b>#${i+1}</b>
+            <b>
+              #${index + 1}
+            </b>
 
-            <b>${esc(u.username)}</b>
+            <b>
+              ${esc(user.username)}
+            </b>
 
             <b>
               ${
-                type==="points"
-                  ? u.points+" pts"
-                  : time(u.seconds)
+                type === "points"
+                  ? `${user.points} pts`
+                  : time(user.seconds)
               }
             </b>
 
           </div>
-
-        `)
-        .join("")
-
-      : "<p class='muted'>Connect a backend for a global leaderboard.</p>";
+        `
+      )
+      .join("");
 }
 
-renderTests();
 
-renderResults();
+/* =========================
+   DARK MODE
+========================= */
 
-updateSession();
-
-$("dark").onclick=()=>{
+$("dark").onclick = () => {
 
   document.documentElement
     .classList.toggle("dark");
 
   localStorage.setItem(
     "dark",
-    document.documentElement.classList.contains("dark")
+    document.documentElement
+      .classList.contains("dark")
       ? "1"
       : "0"
   );
 };
 
-if(localStorage.getItem("dark")==="1")
-  document.documentElement.classList.add("dark");
+if (
+  localStorage.getItem("dark") === "1"
+) {
+  document.documentElement
+    .classList.add("dark");
+}
 
-document.querySelectorAll("[data-go]")
-  .forEach(b=>
-    b.onclick=()=>view(b.dataset.go)
-  );
 
-$("home").onclick=()=>
-  view("homeView");
+/* =========================
+   NAVIGATION
+========================= */
 
-$("username").value=
-  localStorage.getItem("username")||"";
+document
+  .querySelectorAll("[data-go]")
+  .forEach(button => {
 
-$("save").onclick=()=>{
+    button.onclick = () =>
+      view(button.dataset.go);
 
-  const n=$("username").value.trim();
+  });
 
-  if(!/^[A-Za-z0-9_]{3,20}$/.test(n)){
+$("home").onclick = async () => {
 
-    $("nameMsg").textContent=
-      "Invalid username.";
-
-    return;
+  if (currentUser) {
+    view("homeView");
+  } else {
+    showLogin();
   }
 
-  localStorage.setItem(
-    "username",
-    n
-  );
-
-  $("nameMsg").textContent=
-    `Saved as ${n}.`;
 };
 
-$("clear").onclick=()=>{
 
-  if(confirm("Clear local results?")){
+/* =========================
+   AUTH BUTTONS
+========================= */
 
-    localStorage.removeItem("results");
+$("login").onclick = login;
+$("signup").onclick = signup;
 
-    localStorage.removeItem("wordStats");
+$("showSignup").onclick =
+  showSignup;
+
+$("showLogin").onclick =
+  showLogin;
+
+$("logout").onclick =
+  logout;
+
+$("settingsLogout").onclick =
+  logout;
+
+
+/* =========================
+   CLEAR LOCAL DATA
+========================= */
+
+$("clear").onclick = () => {
+
+  if (
+    confirm(
+      "Clear local quiz results?"
+    )
+  ) {
+
+    localStorage.removeItem(
+      "results"
+    );
+
+    localStorage.removeItem(
+      "wordStats"
+    );
 
     renderResults();
   }
 };
 
-document.querySelectorAll(".tab")
-  .forEach(b=>{
 
-    b.onclick=()=>{
+/* =========================
+   LEADERBOARD TABS
+========================= */
 
-      document.querySelectorAll(".tab")
-        .forEach(x=>
-          x.classList.remove("active")
+document
+  .querySelectorAll(".tab")
+  .forEach(button => {
+
+    button.onclick = () => {
+
+      document
+        .querySelectorAll(".tab")
+        .forEach(x =>
+          x.classList.remove(
+            "active"
+          )
         );
 
-      b.classList.add("active");
+      button.classList.add(
+        "active"
+      );
 
       renderBoard(
-        b.dataset.board
+        button.dataset.board
       );
     };
-
   });
 
-renderBoard("points");
+
+/* =========================
+   ENTER KEY FOR AUTH
+========================= */
+
+$("loginPassword")
+  .addEventListener(
+    "keydown",
+    event => {
+
+      if (event.key === "Enter") {
+        login();
+      }
+
+    }
+  );
+
+$("signupPassword2")
+  .addEventListener(
+    "keydown",
+    event => {
+
+      if (event.key === "Enter") {
+        signup();
+      }
+
+    }
+  );
+
+
+/* =========================
+   INITIALISE
+========================= */
+
+renderTests();
+renderResults();
+updateSession();
+
+supabase.auth.onAuthStateChange(
+  async (event, session) => {
+
+    currentUser =
+      session?.user || null;
+
+    if (currentUser) {
+      await loadProfile();
+    } else {
+      showLogin();
+    }
+
+  }
+);
+
+checkAuth();
