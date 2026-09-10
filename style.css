@@ -797,3 +797,32 @@ input:focus {
     transition: none !important;
   }
 }
+
+/* account bar*/
+
+.account-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+
+  margin: 20px 0;
+  padding: 15px 18px;
+
+  border: 1px solid var(--border);
+  border-radius: 15px;
+
+  background: var(--surface);
+}
+
+.account-bar strong {
+  display: block;
+  font-size: 1.05rem;
+}
+
+@media (max-width: 500px) {
+  .account-bar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
