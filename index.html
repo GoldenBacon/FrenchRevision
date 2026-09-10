@@ -2,59 +2,65 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#111827">
-  <meta name="description" content="French vocabulary quiz">
-  <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="style.css">
-  <title>French Vocabulary Quiz</title>
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="theme-color"
+    content="#2563eb"
+  >
+
+  <meta
+    name="description"
+    content="French vocabulary revision quiz"
+  >
+
+  <link
+    rel="manifest"
+    href="manifest.json"
+  >
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
+
+  <title>French Revision</title>
 </head>
 
 <body>
 
-<header class="topbar">
-  <button id="home" class="logo">
-    🇫🇷 French Quiz
-  </button>
-
-  <div class="top-actions">
-    <span id="session" class="session">
-      0 answered · 0% accuracy
-    </span>
-
-    <button id="dark" class="icon-button" aria-label="Toggle dark mode">
-      🌙
-    </button>
-  </div>
-</header>
-
-
-<main>
-
+  <!-- ========================================= -->
   <!-- LOGIN -->
-  <section id="loginView" class="view active">
+  <!-- ========================================= -->
 
-    <div class="page-heading">
-      <span class="eyebrow">Welcome back</span>
-      <h1>Log in 🔐</h1>
-      <p>
-        Log in to keep your username, scores and leaderboard position
-        across devices.
+  <main id="loginView" class="view active">
+    <section class="auth-card">
+
+      <h1>🇫🇷 French Revision</h1>
+
+      <p class="muted">
+        Log in to save your progress and compete
+        on the global leaderboard.
       </p>
-    </div>
 
-    <div class="auth-card">
-
-      <label for="loginEmail">Email</label>
+      <label for="loginEmail">
+        Email
+      </label>
 
       <input
         id="loginEmail"
         type="email"
-        placeholder="you@example.com"
+        placeholder="Email"
         autocomplete="email"
       >
 
-      <label for="loginPassword">Password</label>
+      <label for="loginPassword">
+        Password
+      </label>
 
       <input
         id="loginPassword"
@@ -63,37 +69,42 @@
         autocomplete="current-password"
       >
 
-      <button id="login" class="primary">
-        Log in
+      <button
+        id="login"
+        class="primary"
+      >
+        Log In
       </button>
 
-      <p id="loginMsg" class="auth-message"></p>
+      <p
+        id="loginMsg"
+        class="message"
+      ></p>
 
-      <div class="auth-switch">
-        Don't have an account?
-        <button id="showSignup">
-          Sign up
-        </button>
-      </div>
+      <button
+        id="showSignup"
+        class="link-button"
+      >
+        Don't have an account? Sign up
+      </button>
 
-    </div>
+    </section>
+  </main>
 
-  </section>
 
-
+  <!-- ========================================= -->
   <!-- SIGN UP -->
-  <section id="signupView" class="view">
+  <!-- ========================================= -->
 
-    <div class="page-heading">
-      <span class="eyebrow">Create account</span>
-      <h1>Sign up ✨</h1>
-      <p>
-        Choose a unique username that will appear on the global
-        leaderboards.
+  <main id="signupView" class="view">
+    <section class="auth-card">
+
+      <h1>🇫🇷 Create Account</h1>
+
+      <p class="muted">
+        Choose a unique username to appear
+        on the global leaderboard.
       </p>
-    </div>
-
-    <div class="auth-card">
 
       <label for="signupUsername">
         Username
@@ -102,13 +113,14 @@
       <input
         id="signupUsername"
         type="text"
+        placeholder="Username"
         maxlength="20"
-        placeholder="FrenchMaster"
         autocomplete="username"
       >
 
       <small class="muted">
-        3–20 characters: letters, numbers and underscores.
+        3–20 characters. Letters, numbers and _
+        only.
       </small>
 
       <label for="signupEmail">
@@ -118,7 +130,7 @@
       <input
         id="signupEmail"
         type="email"
-        placeholder="you@example.com"
+        placeholder="Email"
         autocomplete="email"
       >
 
@@ -129,372 +141,520 @@
       <input
         id="signupPassword"
         type="password"
-        placeholder="At least 6 characters"
+        placeholder="Password"
         autocomplete="new-password"
       >
 
       <label for="signupPassword2">
-        Confirm password
+        Confirm Password
       </label>
 
       <input
         id="signupPassword2"
         type="password"
-        placeholder="Repeat your password"
+        placeholder="Confirm password"
         autocomplete="new-password"
       >
 
-      <button id="signup" class="primary">
-        Create account
+      <button
+        id="signup"
+        class="primary"
+      >
+        Create Account
       </button>
 
-      <p id="signupMsg" class="auth-message"></p>
+      <p
+        id="signupMsg"
+        class="message"
+      ></p>
 
-      <div class="auth-switch">
-        Already have an account?
-        <button id="showLogin">
-          Log in
-        </button>
-      </div>
+      <button
+        id="showLogin"
+        class="link-button"
+      >
+        Already have an account? Log in
+      </button>
 
-    </div>
+    </section>
+  </main>
 
-  </section>
 
-
+  <!-- ========================================= -->
   <!-- HOME -->
-  <section id="homeView" class="view">
+  <!-- ========================================= -->
 
-    <div class="hero">
+  <main id="homeView" class="view">
 
-      <span class="eyebrow">
-        French vocabulary
-      </span>
-
-      <h1>
-        Test your French 🇫🇷
-      </h1>
-
-      <p>
-        Choose a vocabulary test, select your game mode and try to
-        climb the global leaderboard.
-      </p>
-
-    </div>
-
-    <div class="account-bar">
+    <header class="topbar">
 
       <div>
-        <small class="muted">Logged in as</small>
+        <h1>🇫🇷 French Revision</h1>
+
+        <p class="muted">
+          Test your French vocabulary
+        </p>
+      </div>
+
+      <button
+        id="dark"
+        class="icon-button"
+        aria-label="Toggle dark mode"
+      >
+        🌙
+      </button>
+
+    </header>
+
+
+    <!-- ACCOUNT BAR -->
+
+    <section class="account-bar">
+
+      <div>
+        <small class="muted">
+          Logged in as
+        </small>
+
         <strong id="currentUsername">
-          —
+          Loading...
         </strong>
       </div>
 
-      <button id="logout" class="secondary">
-        Log out
+      <button
+        id="logout"
+        class="secondary"
+      >
+        Log Out
       </button>
 
-    </div>
+    </section>
 
-    <h2>Choose a test</h2>
 
-    <div id="tests" class="grid"></div>
+    <!-- SESSION -->
 
-    <div class="home-buttons">
+    <section class="session-card">
 
-      <button class="secondary" data-go="resultsView">
-        📊 Results
+      <strong>
+        Current session
+      </strong>
+
+      <span id="session">
+        0 answered · 0% accuracy
+      </span>
+
+    </section>
+
+
+    <!-- NAVIGATION -->
+
+    <nav class="nav-grid">
+
+      <button
+        class="card"
+        data-go="leaderboardView"
+      >
+        🏆
+        <b>Leaderboard</b>
+        <small>See the global rankings</small>
       </button>
 
-      <button class="secondary" data-go="leaderboardView">
-        🏆 Leaderboards
+      <button
+        class="card"
+        data-go="resultsView"
+      >
+        📊
+        <b>Results</b>
+        <small>See your statistics</small>
       </button>
 
-      <button class="secondary" data-go="settingsView">
-        ⚙️ Settings
+    </nav>
+
+
+    <!-- TESTS -->
+
+    <section>
+
+      <h2>Choose a Test</h2>
+
+      <div
+        id="tests"
+        class="grid"
+      ></div>
+
+    </section>
+
+
+    <!-- PRACTICE MISTAKES -->
+
+    <section class="practice-section">
+
+      <button
+        id="mistakes"
+        class="card special-card"
+      >
+        <span>🔁</span>
+
+        <b>Practice Mistakes</b>
+
+        <small>
+          Practise words you've previously
+          got wrong.
+        </small>
       </button>
 
-    </div>
+    </section>
 
-  </section>
+  </main>
 
 
-  <!-- MODE -->
-  <section id="modeView" class="view">
+  <!-- ========================================= -->
+  <!-- MODE SELECTION -->
+  <!-- ========================================= -->
 
-    <button class="back" data-go="homeView">
+  <main id="modeView" class="view">
+
+    <button
+      class="back"
+      data-go="homeView"
+    >
       ← Back
     </button>
 
-    <div class="page-heading">
-
-      <span class="eyebrow">
-        Selected test
-      </span>
+    <section class="page-heading">
 
       <h1 id="testName">
-        French Vocabulary
+        Test
       </h1>
 
-      <p>
-        Choose the number of questions and game mode.
+      <p class="muted">
+        Choose how you want to practise.
       </p>
 
-    </div>
-
-    <div id="modes"></div>
-
-  </section>
+    </section>
 
 
+    <!-- QUESTION COUNT -->
+
+    <section class="count-section">
+
+      <h2>Number of Questions</h2>
+
+      <select id="questionCount">
+
+        <option value="10">
+          10 Questions
+        </option>
+
+        <option value="20">
+          20 Questions
+        </option>
+
+        <option value="30">
+          30 Questions
+        </option>
+
+        <option value="all" selected>
+          All Questions
+        </option>
+
+      </select>
+
+    </section>
+
+
+    <!-- MODES -->
+
+    <section>
+
+      <h2>Game Mode</h2>
+
+      <div
+        id="modes"
+        class="grid"
+      ></div>
+
+    </section>
+
+  </main>
+
+
+  <!-- ========================================= -->
   <!-- QUIZ -->
-  <section id="quizView" class="view">
+  <!-- ========================================= -->
 
-    <div class="quiz-top">
+  <main id="quizView" class="view">
 
-      <button class="back" data-go="homeView">
-        ✕ Exit
+    <header class="quiz-header">
+
+      <button
+        class="back"
+        data-go="homeView"
+      >
+        ← Exit
       </button>
 
       <span id="modeLabel">
         Multiple Choice
       </span>
 
-    </div>
+      <strong id="points">
+        0 pts
+      </strong>
 
-    <div class="quiz-stats">
+    </header>
 
-      <div class="quiz-stat">
-        <small>Question</small>
-        <b id="progress">1/10</b>
-      </div>
 
-      <div class="quiz-stat">
-        <small>Points</small>
-        <b id="points">0 pts</b>
-      </div>
+    <!-- PROGRESS -->
 
-      <div class="quiz-stat">
-        <small>Streak</small>
-        <b id="streak">🔥 0</b>
-      </div>
+    <div class="progress-row">
 
-    </div>
-
-    <div class="question-card">
-
-      <span class="question-label">
-        What does this mean?
+      <span>
+        Question
       </span>
 
-      <h1 id="question">
-        bruit
-      </h1>
+      <strong id="progress">
+        1/10
+      </strong>
 
     </div>
 
-    <div id="answers" class="answers"></div>
 
-    <div id="feedback" class="feedback"></div>
+    <!-- QUESTION -->
 
-    <button id="next" class="primary hidden">
+    <section class="question-card">
+
+      <p class="muted">
+        What does this mean?
+      </p>
+
+      <h1 id="question">
+        Question
+      </h1>
+
+    </section>
+
+
+    <!-- ANSWERS -->
+
+    <section
+      id="answers"
+      class="answers"
+    ></section>
+
+
+    <!-- FEEDBACK -->
+
+    <p
+      id="feedback"
+      class="feedback"
+    ></p>
+
+
+    <!-- NEXT -->
+
+    <button
+      id="next"
+      class="primary hidden"
+    >
       Next →
     </button>
 
-  </section>
+  </main>
 
 
+  <!-- ========================================= -->
   <!-- RESULTS -->
-  <section id="resultsView" class="view">
+  <!-- ========================================= -->
 
-    <div class="page-heading">
+  <main id="resultsView" class="view">
 
-      <span class="eyebrow">
-        Quiz complete
-      </span>
-
-      <h1>
-        Results 🎉
-      </h1>
-
-      <p>
-        Here's how you did.
-      </p>
-
-    </div>
-
-    <div id="summary" class="stats-grid"></div>
-
-    <div id="mistakesList" class="mistakes-list"></div>
-
-    <div class="results-section">
-
-      <h2>
-        Word accuracy
-      </h2>
-
-      <div id="words"></div>
-
-    </div>
-
-    <div class="results-buttons">
-
-      <button class="primary" data-go="homeView">
-        🏠 Back to tests
-      </button>
-
-      <button class="secondary" data-go="leaderboardView">
-        🏆 Leaderboards
-      </button>
-
-    </div>
-
-  </section>
-
-
-  <!-- LEADERBOARD -->
-  <section id="leaderboardView" class="view">
-
-    <button class="back" data-go="homeView">
-      ← Back
+    <button
+      class="back"
+      data-go="homeView"
+    >
+      ← Home
     </button>
 
-    <div class="page-heading">
+    <section class="page-heading">
 
-      <span class="eyebrow">
-        Global competition
-      </span>
+      <h1>📊 Your Results</h1>
 
-      <h1>
-        Leaderboards 🏆
-      </h1>
-
-      <p>
-        Compete against other players around the world.
+      <p class="muted">
+        Your progress and vocabulary statistics.
       </p>
 
-    </div>
+    </section>
+
+
+    <!-- SUMMARY -->
+
+    <section
+      id="summary"
+      class="stats-grid"
+    ></section>
+
+
+    <!-- WORD STATISTICS -->
+
+    <section>
+
+      <h2>Word Statistics</h2>
+
+      <div
+        id="words"
+        class="word-list"
+      ></div>
+
+    </section>
+
+
+    <!-- CLEAR LOCAL DATA -->
+
+    <section class="danger-section">
+
+      <button
+        id="clear"
+        class="secondary"
+      >
+        Clear Local Statistics
+      </button>
+
+    </section>
+
+  </main>
+
+
+  <!-- ========================================= -->
+  <!-- LEADERBOARD -->
+  <!-- ========================================= -->
+
+  <main id="leaderboardView" class="view">
+
+    <button
+      class="back"
+      data-go="homeView"
+    >
+      ← Home
+    </button>
+
+    <section class="page-heading">
+
+      <h1>🏆 Global Leaderboard</h1>
+
+      <p class="muted">
+        Compete with everyone using the app.
+      </p>
+
+    </section>
+
+
+    <!-- LEADERBOARD TABS -->
 
     <div class="tabs">
 
       <button
         class="tab active"
-        data-board="points">
+        data-board="points"
+      >
         ⭐ Points
       </button>
 
       <button
         class="tab"
-        data-board="time">
+        data-board="time"
+      >
         ⏱️ Playtime
       </button>
 
     </div>
 
-    <div id="board" class="leaderboard">
 
+    <!-- LEADERBOARD -->
+
+    <section
+      id="board"
+      class="leaderboard"
+    >
       <p class="muted">
         Loading leaderboard...
       </p>
+    </section>
 
-    </div>
-
-  </section>
+  </main>
 
 
+  <!-- ========================================= -->
   <!-- SETTINGS -->
-  <section id="settingsView" class="view">
+  <!-- ========================================= -->
 
-    <button class="back" data-go="homeView">
-      ← Back
+  <main id="settingsView" class="view">
+
+    <button
+      class="back"
+      data-go="homeView"
+    >
+      ← Home
     </button>
 
-    <div class="page-heading">
+    <section class="page-heading">
 
-      <span class="eyebrow">
-        Account
-      </span>
+      <h1>⚙️ Settings</h1>
 
-      <h1>
-        Settings ⚙️
-      </h1>
-
-      <p>
-        Manage your account.
-      </p>
-
-    </div>
-
-    <div class="settings-card">
-
-      <h2>
-        Your account
-      </h2>
-
-      <p>
-        Username:
-        <strong id="settingsUsername">—</strong>
-      </p>
-
-      <p>
-        Email:
-        <strong id="settingsEmail">—</strong>
-      </p>
-
-    </div>
-
-    <div class="settings-card">
-
-      <h2>
-        Account security
-      </h2>
-
-      <p>
-        Your password is handled securely by the authentication
-        system and is never stored in this website's JavaScript.
-      </p>
-
-      <button id="settingsLogout" class="secondary">
-        Log out
-      </button>
-
-    </div>
-
-    <div class="settings-card danger-card">
-
-      <h2>
-        Local data
-      </h2>
-
-      <p>
-        This removes quiz results and word statistics stored
-        locally on this device. Your online account and global
-        leaderboard scores are not deleted.
-      </p>
-
-      <button id="clear" class="secondary">
-        Clear local results
-      </button>
-
-    </div>
-
-  </section>
-
-</main>
+    </section>
 
 
-<!--
-  Supabase is loaded before the application.
+    <section class="settings-card">
 
-  IMPORTANT:
-  The URL and publishable/anon key will be replaced with YOUR
-  Supabase project details in app.js.
--->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+      <label for="settingsUsername">
+        Username
+      </label>
 
-<script src="tests.js"></script>
-<script src="app.js"></script>
+      <input
+        id="settingsUsername"
+        type="text"
+        readonly
+      >
+
+      <small class="muted">
+        Your username is permanent and unique.
+      </small>
+
+
+      <label for="settingsEmail">
+        Email
+      </label>
+
+      <input
+        id="settingsEmail"
+        type="email"
+        readonly
+      >
+
+    </section>
+
+
+    <button
+      id="settingsLogout"
+      class="secondary"
+    >
+      Log Out
+    </button>
+
+  </main>
+
+
+  <!-- ========================================= -->
+  <!-- SCRIPTS -->
+  <!-- ========================================= -->
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Your vocabulary/tests -->
+  <script src="tests.js"></script>
+
+  <!-- Your app -->
+  <script src="app.js"></script>
 
 </body>
 </html>
