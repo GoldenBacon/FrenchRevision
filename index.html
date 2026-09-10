@@ -1,28 +1,262 @@
-<!doctype html>
-<html lang="en"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="manifest" href="manifest.json"><link rel="stylesheet" href="style.css"><title>French Quiz</title>
-</head><body>
-<header><button id="home">🇫🇷 French Quiz</button><span id="session">0 answered · 0% accuracy</span><button id="dark">🌙</button></header>
-<main>
-<section id="homeView" class="view">
-<h1>Choose a test</h1><p class="muted">Add tests in <code>tests.js</code>.</p><div id="tests" class="grid"></div>
-<div class="card"><h2>Leaderboard username</h2><p class="muted">Use 3–20 letters, numbers, or underscores.</p>
-<div class="row"><input id="username" maxlength="20" placeholder="FrenchFox"><button id="save" class="primary">Save</button></div><p id="nameMsg"></p></div>
-<div class="grid two"><button class="card nav" data-go="resultsView">📊 <b>Results</b><small>History and word accuracy</small></button>
-<button class="card nav" data-go="leaderboardView">🏆 <b>Leaderboards</b><small>Points and playtime</small></button></div>
-</section>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#111827">
 
-<section id="modeView" class="view"><button class="back" data-go="homeView">← Tests</button><p id="testName" class="eyebrow"></p><h1>Choose a mode</h1><div id="modes" class="grid two"></div></section>
+  <title>French Vocabulary Quiz</title>
 
-<section id="quizView" class="view"><div class="quizbar"><button class="back" data-go="modeView">← Modes</button><span id="progress"></span><b id="points">0 pts</b></div>
-<div class="card quiz"><p id="modeLabel" class="eyebrow"></p><h2 id="question"></h2><div id="answers"></div><p id="feedback"></p><button id="next" class="primary full hidden">Next →</button></div></section>
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+</head>
 
-<section id="resultsView" class="view"><button class="back" data-go="homeView">← Home</button><h1>Results</h1><div id="summary" class="stats"></div><div class="card"><h2>Word accuracy</h2><div id="words"></div></div><button id="clear" class="danger">Clear local results</button></section>
+<body>
 
-<section id="leaderboardView" class="view"><button class="back" data-go="homeView">← Home</button><h1>Leaderboards</h1>
-<div class="tabs"><button class="tab active" data-board="points">⭐ Points</button><button class="tab" data-board="playtime">⏱ Playtime</button></div>
-<div id="board" class="card"></div><p class="muted tiny">Configure Supabase for a real global leaderboard.</p></section>
-</main>
-<script src="tests.js"></script><script src="app.js"></script>
-</body></html>
+  <header class="topbar">
+    <button id="home" class="logo">🇫🇷 French Quiz</button>
+
+    <div class="top-actions">
+      <span id="session" class="session">0 answered · 0% accuracy</span>
+      <button id="dark" class="icon-button" aria-label="Toggle dark mode">
+        🌙
+      </button>
+    </div>
+  </header>
+
+
+  <main>
+
+    <!-- HOME -->
+    <section id="homeView" class="view active">
+      <div class="hero">
+        <span class="eyebrow">French vocabulary</span>
+        <h1>Test your French 🇫🇷</h1>
+        <p>
+          Choose a vocabulary test, pick a game mode, and see how many
+          words you can master.
+        </p>
+      </div>
+
+      <h2>Choose a test</h2>
+
+      <div id="tests" class="grid"></div>
+
+      <div class="home-buttons">
+        <button class="secondary" data-go="resultsView">
+          📊 Results
+        </button>
+
+        <button class="secondary" data-go="leaderboardView">
+          🏆 Leaderboards
+        </button>
+
+        <button class="secondary" data-go="settingsView">
+          ⚙️ Settings
+        </button>
+      </div>
+    </section>
+
+
+    <!-- MODE / QUESTION COUNT -->
+    <section id="modeView" class="view">
+
+      <button class="back" data-go="homeView">
+        ← Back
+      </button>
+
+      <div class="page-heading">
+        <span class="eyebrow">Selected test</span>
+        <h1 id="testName">French Vocabulary</h1>
+        <p>Choose how you want to practise.</p>
+      </div>
+
+      <div id="modes"></div>
+
+    </section>
+
+
+    <!-- QUIZ -->
+    <section id="quizView" class="view">
+
+      <div class="quiz-top">
+        <button class="back" data-go="homeView">
+          ✕ Exit
+        </button>
+
+        <span id="modeLabel">Multiple Choice</span>
+      </div>
+
+      <div class="quiz-stats">
+
+        <div class="quiz-stat">
+          <small>Question</small>
+          <b id="progress">1/10</b>
+        </div>
+
+        <div class="quiz-stat">
+          <small>Points</small>
+          <b id="points">0 pts</b>
+        </div>
+
+        <div class="quiz-stat">
+          <small>Streak</small>
+          <b id="streak">🔥 0</b>
+        </div>
+
+      </div>
+
+
+      <div class="question-card">
+
+        <span class="question-label">
+          What does this mean?
+        </span>
+
+        <h1 id="question">bruit</h1>
+
+      </div>
+
+
+      <div id="answers" class="answers"></div>
+
+      <div id="feedback" class="feedback"></div>
+
+      <button id="next" class="primary hidden">
+        Next →
+      </button>
+
+    </section>
+
+
+    <!-- RESULTS -->
+    <section id="resultsView" class="view">
+
+      <div class="page-heading">
+        <span class="eyebrow">Quiz complete</span>
+        <h1>Results 🎉</h1>
+        <p>Here is how you did.</p>
+      </div>
+
+      <div id="summary" class="stats-grid"></div>
+
+      <div id="mistakesList" class="mistakes-list"></div>
+
+      <div class="results-section">
+
+        <h2>Word accuracy</h2>
+
+        <div id="words"></div>
+
+      </div>
+
+      <div class="results-buttons">
+
+        <button class="primary" data-go="homeView">
+          🏠 Back to tests
+        </button>
+
+        <button class="secondary" data-go="leaderboardView">
+          🏆 Leaderboards
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- LEADERBOARDS -->
+    <section id="leaderboardView" class="view">
+
+      <button class="back" data-go="homeView">
+        ← Back
+      </button>
+
+      <div class="page-heading">
+        <span class="eyebrow">Competition</span>
+        <h1>Leaderboards 🏆</h1>
+        <p>See the highest scores and longest playtimes.</p>
+      </div>
+
+      <div class="tabs">
+
+        <button
+          class="tab active"
+          data-board="points">
+          ⭐ Points
+        </button>
+
+        <button
+          class="tab"
+          data-board="time">
+          ⏱️ Playtime
+        </button>
+
+      </div>
+
+      <div id="board" class="leaderboard"></div>
+
+    </section>
+
+
+    <!-- SETTINGS -->
+    <section id="settingsView" class="view">
+
+      <button class="back" data-go="homeView">
+        ← Back
+      </button>
+
+      <div class="page-heading">
+        <span class="eyebrow">Your profile</span>
+        <h1>Settings ⚙️</h1>
+        <p>Choose the username shown on your device.</p>
+      </div>
+
+      <div class="settings-card">
+
+        <label for="username">
+          Username
+        </label>
+
+        <input
+          id="username"
+          type="text"
+          maxlength="20"
+          placeholder="Your username"
+          autocomplete="off"
+        >
+
+        <button id="save" class="primary">
+          Save username
+        </button>
+
+        <p id="nameMsg" class="muted"></p>
+
+      </div>
+
+
+      <div class="settings-card danger-card">
+
+        <h2>Local data</h2>
+
+        <p>
+          This removes your results and word statistics stored on
+          this device.
+        </p>
+
+        <button id="clear" class="secondary">
+          Clear local results
+        </button>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <script src="tests.js"></script>
+  <script src="app.js"></script>
+
+</body>
+</html>
