@@ -1,1049 +1,1506 @@
-// ============================================
+// =====================================================
 // FRENCH REVISION APP
-// Supabase + Quiz System
-// ============================================
-
-// ---------- SUPABASE ----------
-
-const SUPABASE_URL = "https://aoabqbdazcabwyiyfpbs.supabase.co";
-const SUPABASE_KEY = "sb_publishable_mpTrg2TsXLKKtEnNas6H-g_pSTDJX7C";
-
-const supabase = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
+// Local-only version.
+// No accounts. No Supabase.
+// =====================================================
 
 
-// ---------- APP STATE ----------
-
+let currentCategory = null;
 let currentTest = null;
 let currentMode = null;
 let quiz = null;
-let currentUser = null;
-let currentProfile = null;
+
+
+// =====================================================
+// SESSION
+// =====================================================
 
 const session = {
   answered: 0,
   correct: 0,
-  points: 0,
-  started: Date.now()
-};
-
-const MODES = {
-  multiple: [
-    "🔘",
-    "Multiple Choice",
-    "Pick the English meaning."
-  ],
-  typing: [
-    "⌨️",
-    "Enter English",
-    "Type the English meaning."
-  ]
+  points: 0
 };
 
 
-// ---------- HELPERS ----------
+// =====================================================
+// HELPERS
+// =====================================================
 
 const $ = id => document.getElementById(id);
 
-const get = (key, fallback) => {
+
+function get(key, fallback) {
   try {
-    return JSON.parse(localStorage.getItem(key)) ?? fallback;
+    const value = JSON.parse(
+      localStorage.getItem(key)
+    );
+
+    return value ?? fallback;
+
   } catch {
     return fallback;
   }
-};
+}
 
-const set = (key, value) => {
-  localStorage.setItem(key, JSON.stringify(value));
-};
 
-const norm = value =>
-  String(value)
-    .toLowerCase()
-    .trim()
-    .replace(/[.,!?;:]/g, "")
-    .replace(/\s+/g, " ");
+function set(key, value) {
+  localStorage.setItem(
+    key,
+    JSON.stringify(value)
+  );
+}
 
-const esc = value =>
-  String(value).replace(/[&<>"']/g, char => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#039;"
-  }[char]));
 
-const shuffle = array => {
+function shuffle(array) {
+
   const copy = [...array];
 
-  for (let i = copy.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
+  for (
+    let i = copy.length - 1;
+    i > 0;
+    i--
+  ) {
+
+    const j =
+      Math.floor(Math.random() * (i + 1));
+
+    [copy[i], copy[j]] =
+      [copy[j], copy[i]];
   }
 
   return copy;
-};
+}
 
-const time = seconds => {
-  if (seconds >= 3600) {
-    return `${Math.floor(seconds / 3600)}h ${Math.floor((seconds % 3600) / 60)}m`;
-  }
 
-  if (seconds >= 60) {
-    return `${Math.floor(seconds / 60)}m ${seconds % 60}s`;
-  }
+function norm(value) {
 
-  return `${seconds}s`;
-};
+  return String(value)
+    .toLowerCase()
+    .trim()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[.!?;:]/g, "")
+    .replace(/\s+/g, " ");
+}
+
+
+function esc(value) {
+
+  return String(value).replace(
+    /[&<>"']/g,
+    char => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;"
+    }[char])
+  );
+}
+
+
+// =====================================================
+// VIEW NAVIGATION
+// =====================================================
 
 function view(id) {
+
   document
     .querySelectorAll(".view")
-    .forEach(element => element.classList.remove("active"));
+    .forEach(element => {
+      element.classList.remove("active");
+    });
+
 
   const target = $(id);
 
   if (target) {
+
     target.classList.add("active");
-    scrollTo(0, 0);
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
   }
 }
 
 
-// ---------- AUTH UI ----------
-
-function showLogin() {
-  view("loginView");
-}
-
-function showSignup() {
-  view("signupView");
-}
-
-
-// ---------- AUTH ----------
-
-async function checkAuth() {
-  const {
-    data: { session: authSession }
-  } = await supabase.auth.getSession();
-
-  if (authSession?.user) {
-    currentUser = authSession.user;
-    await loadProfile();
-    showLoggedIn();
-  } else {
-    currentUser = null;
-    currentProfile = null;
-    showLogin();
-  }
-}
-
-
-async function loadProfile() {
-  if (!currentUser) return;
-
-  const { data, error } = await supabase
-    .from("profiles")
-    .select("id, username")
-    .eq("id", currentUser.id)
-    .single();
-
-  if (error) {
-    console.error("Could not load profile:", error);
-    return;
-  }
-
-  currentProfile = data;
-
-  if ($("currentUsername")) {
-    $("currentUsername").textContent = data.username;
-  }
-
-  if ($("settingsUsername")) {
-    $("settingsUsername").value = data.username;
-  }
-
-  if ($("settingsEmail")) {
-    $("settingsEmail").value = currentUser.email || "";
-  }
-}
-
-
-function showLoggedIn() {
-  if ($("currentUsername") && currentProfile) {
-    $("currentUsername").textContent = currentProfile.username;
-  }
-
-  view("homeView");
-}
-
-
-async function login() {
-  const email = $("loginEmail").value.trim();
-  const password = $("loginPassword").value;
-
-  $("loginMsg").textContent = "";
-
-  if (!email || !password) {
-    $("loginMsg").textContent = "Please enter your email and password.";
-    return;
-  }
-
-  $("login").disabled = true;
-  $("login").textContent = "Logging in...";
-
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email,
-    password
-  });
-
-  $("login").disabled = false;
-  $("login").textContent = "Log In";
-
-  if (error) {
-    $("loginMsg").textContent = error.message;
-    return;
-  }
-
-  currentUser = data.user;
-
-  await loadProfile();
-  showLoggedIn();
-}
-
-
-async function signup() {
-  const username = $("signupUsername").value.trim();
-  const email = $("signupEmail").value.trim();
-  const password = $("signupPassword").value;
-  const password2 = $("signupPassword2").value;
-
-  $("signupMsg").textContent = "";
-
-  // Username validation
-  if (!/^[A-Za-z0-9_]{3,20}$/.test(username)) {
-    $("signupMsg").textContent =
-      "Username must be 3–20 characters and use only letters, numbers or _.";
-    return;
-  }
-
-  if (!email) {
-    $("signupMsg").textContent = "Please enter your email.";
-    return;
-  }
-
-  if (password.length < 6) {
-    $("signupMsg").textContent =
-      "Password must be at least 6 characters.";
-    return;
-  }
-
-  if (password !== password2) {
-    $("signupMsg").textContent =
-      "The passwords do not match.";
-    return;
-  }
-
-  $("signup").disabled = true;
-  $("signup").textContent = "Creating account...";
-
-  // ============================================
-  // THIS IS THE IMPORTANT SUPABASE CHANGE
-  // ============================================
-
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
-
-    options: {
-      data: {
-        username
-      }
-    }
-  });
-
-  $("signup").disabled = false;
-  $("signup").textContent = "Create Account";
-
-  if (error) {
-    if (
-      error.message.toLowerCase().includes("duplicate") ||
-      error.message.toLowerCase().includes("unique") ||
-      error.message.toLowerCase().includes("username")
-    ) {
-      $("signupMsg").textContent =
-        "That username is already taken. Please choose another.";
-    } else {
-      $("signupMsg").textContent = error.message;
-    }
-
-    return;
-  }
-
-  /*
-    The Supabase database trigger now automatically creates
-    the profile using the username above.
-
-    We therefore DO NOT insert into profiles here.
-  */
-
-  if (data.session) {
-    currentUser = data.user;
-    await loadProfile();
-    showLoggedIn();
-  } else {
-    $("signupMsg").textContent =
-      "Account created! Check your email to confirm your account, then log in.";
-
-    $("signupPassword").value = "";
-    $("signupPassword2").value = "";
-  }
-}
-
-
-async function logout() {
-  await supabase.auth.signOut();
-
-  currentUser = null;
-  currentProfile = null;
-
-  showLogin();
-}
-
-
-// ---------- SESSION STATS ----------
+// =====================================================
+// SESSION DISPLAY
+// =====================================================
 
 function updateSession() {
-  if (!$("session")) return;
 
-  const accuracy = session.answered
-    ? Math.round((session.correct / session.answered) * 100)
-    : 0;
+  $("sessionAnswered").textContent =
+    session.answered;
 
-  $("session").textContent =
-    `${session.answered} answered · ${accuracy}% accuracy`;
+
+  $("sessionAccuracy").textContent =
+    session.answered
+      ? `${Math.round(
+          session.correct /
+          session.answered *
+          100
+        )}%`
+      : "0%";
+
+
+  $("sessionPoints").textContent =
+    session.points;
+
+
+  const stats =
+    get("wordStats", {});
+
+
+  const mistakes =
+    Object.values(stats)
+      .filter(stat =>
+        stat.attempts > stat.correct
+      )
+      .length;
+
+
+  $("mistakesInfo").textContent =
+    mistakes
+      ? `${mistakes} word${
+          mistakes === 1 ? "" : "s"
+        } currently have mistakes.`
+      : "No recorded mistakes yet.";
 }
 
 
-function statsWord(fr, correct) {
-  const stats = get("wordStats", {});
+// =====================================================
+// DARK MODE
+// =====================================================
 
-  stats[fr] ??= {
-    attempts: 0,
-    correct: 0
+function setupDarkMode() {
+
+  if (
+    localStorage.getItem("darkMode") === "1"
+  ) {
+
+    document.documentElement
+      .classList.add("dark");
+
+    $("darkToggle").textContent = "☀️";
+
+  } else {
+
+    $("darkToggle").textContent = "🌙";
+  }
+
+
+  $("darkToggle").onclick = () => {
+
+    const dark =
+      document.documentElement
+        .classList.toggle("dark");
+
+
+    localStorage.setItem(
+      "darkMode",
+      dark ? "1" : "0"
+    );
+
+
+    $("darkToggle").textContent =
+      dark ? "☀️" : "🌙";
   };
+}
+
+
+// =====================================================
+// WORD ACCURACY
+// =====================================================
+
+function recordWord(fr, correct) {
+
+  const stats =
+    get("wordStats", {});
+
+
+  if (!stats[fr]) {
+
+    stats[fr] = {
+      attempts: 0,
+      correct: 0
+    };
+  }
+
 
   stats[fr].attempts++;
+
 
   if (correct) {
     stats[fr].correct++;
   }
 
+
   set("wordStats", stats);
 }
 
 
-// ---------- TESTS ----------
+function getAllWords() {
 
-function renderTests() {
-  $("tests").innerHTML = TESTS.map(test => `
-    <button class="card test" data-test="${esc(test.id)}">
-      <h2>${esc(test.title)}</h2>
-      <span>${esc(test.description)}</span>
-      <small>${Object.keys(test.words).length} words</small>
-    </button>
-  `).join("");
+  const words = [];
 
-  document.querySelectorAll("[data-test]").forEach(button => {
-    button.onclick = () => {
-      currentTest = TESTS.find(
-        test => test.id === button.dataset.test
-      );
-
-      $("testName").textContent = currentTest.title;
-
-      renderModes();
-
-      view("modeView");
-    };
-  });
-}
-
-
-// ---------- MODES ----------
-
-function renderModes() {
-  $("modes").innerHTML = Object.entries(MODES).map(
-    ([id, info]) => `
-      <button class="card mode" data-mode="${id}">
-        <span>${info[0]}</span>
-        <b>${info[1]}</b>
-        <small>${info[2]}</small>
-      </button>
-    `
-  ).join("");
-
-  document.querySelectorAll("[data-mode]").forEach(button => {
-    button.onclick = () => {
-      const countSelect = $("questionCount");
-
-      let count = countSelect
-        ? countSelect.value
-        : "all";
-
-      start(button.dataset.mode, count);
-    };
-  });
-}
-
-
-// ---------- QUIZ START ----------
-
-function start(mode, count = "all") {
-  currentMode = mode;
-
-  let items = Object.entries(currentTest.words);
-
-  items = shuffle(items);
-
-  if (count !== "all") {
-    items = items.slice(0, Number(count));
-  }
-
-  quiz = {
-    items,
-    i: 0,
-    points: 0,
-    streak: 0,
-    bestStreak: 0,
-    mistakes: [],
-    started: Date.now()
-  };
-
-  view("quizView");
-
-  renderQ();
-}
-
-
-// ---------- PRACTICE MISTAKES ----------
-
-function startMistakes() {
-  const stats = get("wordStats", {});
-
-  let mistakes = [];
 
   for (const test of TESTS) {
-    for (const [fr, en] of Object.entries(test.words)) {
-      const stat = stats[fr];
 
-      if (stat && stat.attempts > stat.correct) {
-        mistakes.push({
+    for (
+      const [fr, en]
+      of Object.entries(test.words)
+    ) {
+
+      if (
+        !words.some(word =>
+          word.fr === fr
+        )
+      ) {
+
+        words.push({
           fr,
-          en,
-          test: test.title
+          en
         });
       }
     }
   }
 
-  if (!mistakes.length) {
-    alert("You don't have any recorded mistakes yet!");
+
+  return words;
+}
+
+
+function renderWordStats() {
+
+  const stats =
+    get("wordStats", {});
+
+
+  const query =
+    norm($("wordSearch").value);
+
+
+  const words =
+    getAllWords();
+
+
+  const filtered =
+    words.filter(word => {
+
+      return (
+        !query ||
+        norm(word.fr).includes(query) ||
+        norm(word.en).includes(query)
+      );
+    });
+
+
+  if (!filtered.length) {
+
+    $("wordStats").innerHTML =
+      `<p class="muted">No words found.</p>`;
+
     return;
   }
 
-  currentTest = {
-    id: "mistakes",
-    title: "Practice Mistakes",
-    description: "Words you've previously got wrong.",
-    words: Object.fromEntries(
-      mistakes.map(word => [word.fr, word.en])
+
+  $("wordStats").innerHTML =
+    filtered.map(word => {
+
+      const stat =
+        stats[word.fr] || {
+          attempts: 0,
+          correct: 0
+        };
+
+
+      const accuracy =
+        stat.attempts
+          ? Math.round(
+              stat.correct /
+              stat.attempts *
+              100
+            )
+          : 0;
+
+
+      let cls = "";
+
+
+      if (stat.attempts) {
+
+        if (accuracy >= 80) {
+          cls = "accuracy-good";
+        }
+
+        if (accuracy < 50) {
+          cls = "accuracy-bad";
+        }
+      }
+
+
+      return `
+        <div class="word-row">
+
+          <div>
+
+            <strong>
+              ${esc(word.fr)}
+            </strong>
+
+            <small>
+              ${esc(word.en)}
+            </small>
+
+          </div>
+
+          <div>
+
+            <strong class="${cls}">
+              ${
+                stat.attempts
+                  ? accuracy + "%"
+                  : "—"
+              }
+            </strong>
+
+            <small>
+              ${stat.attempts}
+              attempt${
+                stat.attempts === 1
+                  ? ""
+                  : "s"
+              }
+            </small>
+
+          </div>
+
+        </div>
+      `;
+
+    }).join("");
+}
+
+
+// =====================================================
+// CATEGORIES
+// =====================================================
+
+function getCategories() {
+
+  return [
+    ...new Set(
+      TESTS.map(test =>
+        test.category
+      )
     )
+  ].sort();
+}
+
+
+function renderCategories() {
+
+  const query =
+    norm($("categorySearch").value);
+
+
+  const categories =
+    getCategories()
+      .filter(category =>
+        !query ||
+        norm(category).includes(query)
+      );
+
+
+  if (!categories.length) {
+
+    $("categories").innerHTML =
+      `<p class="muted">
+        No categories found.
+      </p>`;
+
+    return;
+  }
+
+
+  $("categories").innerHTML =
+    categories.map(category => {
+
+      const tests =
+        TESTS.filter(
+          test =>
+            test.category === category
+        );
+
+
+      const wordCount =
+        tests.reduce(
+          (total, test) =>
+            total +
+            Object.keys(test.words).length,
+          0
+        );
+
+
+      return `
+        <button
+          class="category-card"
+          data-category="${esc(category)}"
+        >
+
+          <b>
+            📁 ${esc(category)}
+          </b>
+
+          <small>
+            ${tests.length}
+            test${tests.length === 1 ? "" : "s"}
+            ·
+            ${wordCount}
+            word${wordCount === 1 ? "" : "s"}
+          </small>
+
+        </button>
+      `;
+
+    }).join("");
+
+
+  document
+    .querySelectorAll("[data-category]")
+    .forEach(button => {
+
+      button.onclick = () => {
+
+        currentCategory =
+          button.dataset.category;
+
+
+        renderTests();
+
+        view("testsView");
+      };
+    });
+}
+
+
+// =====================================================
+// TEST LIST
+// =====================================================
+
+function categoryTests() {
+
+  return TESTS.filter(
+    test =>
+      test.category === currentCategory
+  );
+}
+
+
+function mergeTests(tests) {
+
+  const words = {};
+
+
+  for (const test of tests) {
+
+    for (
+      const [fr, en]
+      of Object.entries(test.words)
+    ) {
+
+      if (!words[fr]) {
+        words[fr] = en;
+      }
+    }
+  }
+
+
+  return {
+
+    id:
+      `all-${currentCategory}`,
+
+    category:
+      currentCategory,
+
+    title:
+      `All ${currentCategory}`,
+
+    description:
+      `Every word from every test in ${currentCategory}.`,
+
+    words
+
   };
+}
 
-  $("testName").textContent = "Practice Mistakes";
 
-  renderModes();
+function renderTests() {
+
+  const tests =
+    categoryTests();
+
+
+  $("categoryTitle").textContent =
+    currentCategory;
+
+
+  const totalWords =
+    tests.reduce(
+      (total, test) =>
+        total +
+        Object.keys(test.words).length,
+      0
+    );
+
+
+  $("allTestContainer").innerHTML = `
+
+    <button
+      id="allCategoryButton"
+      class="all-card"
+    >
+
+      <b>
+        ⭐ All tests in
+        ${esc(currentCategory)}
+      </b>
+
+      <small>
+        Test all
+        ${totalWords}
+        words from this category.
+      </small>
+
+    </button>
+
+  `;
+
+
+  $("allCategoryButton").onclick =
+    () => {
+
+      currentTest =
+        mergeTests(tests);
+
+      openMode();
+    };
+
+
+  $("tests").innerHTML =
+    tests.map(test => `
+
+      <button
+        class="test-card"
+        data-test-id="${esc(test.id)}"
+      >
+
+        <b>
+          📝 ${esc(test.title)}
+        </b>
+
+        <small>
+          ${esc(test.description)}
+        </small>
+
+        <small>
+          ${
+            Object.keys(test.words).length
+          }
+          words
+        </small>
+
+      </button>
+
+    `).join("");
+
+
+  document
+    .querySelectorAll("[data-test-id]")
+    .forEach(button => {
+
+      button.onclick = () => {
+
+        currentTest =
+          TESTS.find(
+            test =>
+              test.id ===
+              button.dataset.testId
+          );
+
+
+        openMode();
+      };
+    });
+}
+
+
+// =====================================================
+// MODE SELECTION
+// =====================================================
+
+function openMode() {
+
+  $("testTitle").textContent =
+    currentTest.title;
+
+
+  $("testDescription").textContent =
+    `${currentTest.description} Choose a mode.`;
+
 
   view("modeView");
 }
 
 
-// ---------- ANSWER OPTIONS ----------
+// =====================================================
+// MULTIPLE MEANINGS
+// =====================================================
+//
+// English meanings are separated by "/".
+//
+// Example:
+// "current/common"
+//
+// Either:
+// current
+//
+// or:
+// common
+//
+// is accepted.
+//
+// Multiple meanings can also be typed:
+// current, common
+//
+// =====================================================
 
-function acceptedAnswers(expected) {
-  return expected
+function expectedMeanings(expected) {
+
+  return String(expected)
     .split("/")
-    .map(answer => norm(answer))
+    .map(norm)
     .filter(Boolean);
 }
 
 
-function isCorrect(given, expected) {
-  return acceptedAnswers(expected).includes(norm(given));
+function typedMeanings(input) {
+
+  return String(input)
+    .split(/[,/;]+/)
+    .map(norm)
+    .filter(Boolean);
 }
 
 
-function choices(correct) {
-  const otherAnswers = Object.values(currentTest.words)
-    .filter(answer => answer !== correct);
+function isCorrect(input, expected) {
+
+  const accepted =
+    expectedMeanings(expected);
+
+
+  const typed =
+    typedMeanings(input);
+
+
+  if (!typed.length) {
+    return false;
+  }
+
+
+  // One correct meaning is enough.
+  //
+  // If multiple meanings are entered,
+  // every entered meaning must be accepted.
+
+  return typed.every(
+    answer =>
+      accepted.includes(answer)
+  );
+}
+
+
+// =====================================================
+// MULTIPLE-CHOICE ANSWERS
+// =====================================================
+
+function answerChoices(correct) {
+
+  const others = [];
+
+
+  for (const test of TESTS) {
+
+    for (
+      const value
+      of Object.values(test.words)
+    ) {
+
+      if (
+        value !== correct &&
+        !others.includes(value)
+      ) {
+
+        others.push(value);
+      }
+    }
+  }
+
 
   return shuffle([
     correct,
-    ...shuffle(otherAnswers).slice(0, 3)
+    ...shuffle(others).slice(0, 3)
   ]);
 }
 
 
-// ---------- QUESTION ----------
+// =====================================================
+// START QUIZ
+// =====================================================
 
-function renderQ() {
-  const [fr, en] = quiz.items[quiz.i];
+function startQuiz(mode) {
 
-  $("progress").textContent =
-    `${quiz.i + 1}/${quiz.items.length}`;
+  currentMode = mode;
 
-  $("points").textContent =
-    `${quiz.points} pts`;
 
-  $("modeLabel").textContent =
-    MODES[currentMode][1];
+  const items =
+    shuffle(
+      Object.entries(
+        currentTest.words
+      )
+    );
 
-  $("question").textContent = fr;
 
-  $("feedback").textContent = "";
+  quiz = {
 
-  $("next").classList.add("hidden");
-  $("next").classList.remove("answered");
+    items,
 
-  if (currentMode === "multiple") {
+    index: 0,
 
-    $("answers").innerHTML = choices(en)
-      .map(answer => `
-        <button class="answer" data-a="${esc(answer)}">
-          ${esc(answer)}
-        </button>
-      `)
-      .join("");
+    points: 0,
 
-    document.querySelectorAll(".answer").forEach(button => {
-      button.onclick = () =>
-        answer(
-          button.dataset.a,
-          en,
-          fr,
-          button
-        );
-    });
+    correct: 0,
 
-  } else {
+    wrong: 0,
 
-    $("answers").innerHTML = `
-      <div class="row">
-        <input
-          id="typing"
-          placeholder="English meaning"
-          autocomplete="off"
-        >
+    streak: 0,
 
-        <button id="check" class="primary">
-          Check
-        </button>
-      </div>
-    `;
+    bestStreak: 0,
 
-    $("typing").focus();
+    missed: [],
 
-    $("check").onclick = () =>
-      answer(
-        $("typing").value,
-        en,
-        fr
-      );
+    started: Date.now()
 
-    $("typing").onkeydown = event => {
-      if (event.key === "Enter") {
-        $("check").click();
-      }
-    };
-  }
+  };
+
+
+  $("quizMode").textContent =
+    mode === "multiple"
+      ? "Multiple Choice"
+      : "Enter English";
+
+
+  view("quizView");
+
+  renderQuestion();
 }
 
 
-// ---------- ANSWERING ----------
+// =====================================================
+// RENDER QUESTION
+// =====================================================
 
-function answer(given, en, fr, clicked) {
-  if ($("next").classList.contains("answered")) {
+function renderQuestion() {
+
+  const [
+    fr,
+    en
+  ] = quiz.items[quiz.index];
+
+
+  $("quizProgress").textContent =
+    `${quiz.index + 1}/${quiz.items.length}`;
+
+
+  $("progressFill").style.width =
+    `${
+      (
+        (quiz.index + 1) /
+        quiz.items.length
+      ) * 100
+    }%`;
+
+
+  $("quizPoints").textContent =
+    `${quiz.points} pts`;
+
+
+  $("question").textContent =
+    fr;
+
+
+  $("feedback").textContent = "";
+
+  $("feedback").style.color =
+    "var(--text)";
+
+
+  $("nextButton")
+    .classList.add("hidden");
+
+
+  $("nextButton").onclick =
+    nextQuestion;
+
+
+  // -----------------------------------------------
+  // MULTIPLE CHOICE
+  // -----------------------------------------------
+
+  if (currentMode === "multiple") {
+
+    $("answers").innerHTML =
+      answerChoices(en)
+        .map(answer => `
+
+          <button
+            class="answer"
+            data-answer="${esc(answer)}"
+          >
+            ${esc(answer)}
+          </button>
+
+        `)
+        .join("");
+
+
+    document
+      .querySelectorAll(".answer")
+      .forEach(button => {
+
+        button.onclick = () => {
+
+          checkAnswer(
+            button.dataset.answer,
+            en,
+            fr,
+            button
+          );
+
+        };
+      });
+
+
     return;
   }
 
-  const correct = isCorrect(given, en);
+
+  // -----------------------------------------------
+  // ENTER ENGLISH
+  // -----------------------------------------------
+
+  $("answers").innerHTML = `
+
+    <div class="typing-row">
+
+      <input
+        id="typingInput"
+        type="text"
+        placeholder="Enter one or more English meanings"
+        autocomplete="off"
+        autocapitalize="none"
+        spellcheck="false"
+      >
+
+      <button
+        id="checkTyping"
+        class="primary"
+      >
+        Check
+      </button>
+
+    </div>
+
+  `;
+
+
+  $("typingInput").focus();
+
+
+  $("checkTyping").onclick =
+    () => {
+
+      checkAnswer(
+        $("typingInput").value,
+        en,
+        fr
+      );
+    };
+
+
+  $("typingInput").onkeydown =
+    event => {
+
+      if (event.key === "Enter") {
+
+        $("checkTyping").click();
+      }
+    };
+}
+
+
+// =====================================================
+// CHECK ANSWER
+// =====================================================
+
+function checkAnswer(
+  given,
+  expected,
+  fr,
+  clickedButton = null
+) {
+
+  // Prevent answering the same question twice.
+
+  if (
+    !$("nextButton")
+      .classList
+      .contains("hidden")
+  ) {
+
+    return;
+  }
+
+
+  const correct =
+    isCorrect(
+      given,
+      expected
+    );
+
+
+  // -----------------------------------------------
+  // SESSION STATS
+  // -----------------------------------------------
 
   session.answered++;
+
 
   if (correct) {
     session.correct++;
   }
 
-  statsWord(fr, correct);
 
-  // ---------- STREAK ----------
+  recordWord(
+    fr,
+    correct
+  );
+
+
+  updateSession();
+
+
+  // -----------------------------------------------
+  // CORRECT
+  // -----------------------------------------------
 
   if (correct) {
+
+    quiz.correct++;
+
     quiz.streak++;
+
 
     quiz.bestStreak =
       Math.max(
         quiz.bestStreak,
         quiz.streak
       );
-  } else {
-    quiz.streak = 0;
-    quiz.mistakes.push({
-      fr,
-      en
-    });
-  }
 
-  // ---------- POINTS ----------
 
-  let earned = 0;
-
-  if (correct) {
-    earned =
+    const earned =
       10 +
-      Math.min(quiz.streak, 5) * 2;
+      Math.min(
+        quiz.streak - 1,
+        5
+      ) * 2;
+
 
     quiz.points += earned;
+
     session.points += earned;
-  }
 
-  updateSession();
 
-  $("points").textContent =
-    `${quiz.points} pts`;
-
-  // ---------- MULTIPLE CHOICE ----------
-
-  if (clicked) {
-
-    document
-      .querySelectorAll(".answer")
-      .forEach(button => {
-
-        button.disabled = true;
-
-        if (
-          isCorrect(
-            button.dataset.a,
-            en
-          )
-        ) {
-          button.classList.add("correct");
-        }
-      });
-
-    if (!correct) {
-      clicked.classList.add("wrong");
-    }
-  }
-
-  // ---------- FEEDBACK ----------
-
-  if (correct) {
     $("feedback").textContent =
       `+${earned} points — Correct! 🔥`;
 
+
     $("feedback").style.color =
       "var(--good)";
-  } else {
+
+  }
+
+
+  // -----------------------------------------------
+  // WRONG
+  // -----------------------------------------------
+
+  else {
+
+    quiz.wrong++;
+
+    quiz.streak = 0;
+
+
+    quiz.missed.push({
+      fr,
+      en: expected
+    });
+
+
     $("feedback").textContent =
-      `Answer: ${en}`;
+      `Not quite. Accepted answer: ${expected}`;
+
 
     $("feedback").style.color =
       "var(--bad)";
   }
 
-  $("next").classList.remove("hidden");
-  $("next").classList.add("answered");
 
-  $("next").onclick = next;
+  // -----------------------------------------------
+  // MULTIPLE CHOICE FEEDBACK
+  // -----------------------------------------------
+
+  if (clickedButton) {
+
+    const buttons =
+      document.querySelectorAll(
+        ".answer"
+      );
+
+
+    buttons.forEach(button => {
+
+      button.disabled = true;
+
+
+      if (
+        isCorrect(
+          button.dataset.answer,
+          expected
+        )
+      ) {
+
+        button.classList.add(
+          "correct"
+        );
+      }
+
+    });
+
+
+    if (!correct) {
+
+      clickedButton.classList.add(
+        "wrong"
+      );
+    }
+  }
+
+
+  $("quizPoints").textContent =
+    `${quiz.points} pts`;
+
+
+  $("nextButton")
+    .classList.remove("hidden");
 }
 
 
-// ---------- NEXT QUESTION ----------
+// =====================================================
+// NEXT QUESTION
+// =====================================================
 
-function next() {
-  quiz.i++;
+function nextQuestion() {
 
-  if (quiz.i >= quiz.items.length) {
-    finish();
+  quiz.index++;
+
+
+  if (
+    quiz.index >=
+    quiz.items.length
+  ) {
+
+    finishQuiz();
+
   } else {
-    renderQ();
+
+    renderQuestion();
   }
 }
 
 
-// ---------- FINISH ----------
+// =====================================================
+// RESULTS
+// =====================================================
 
-async function finish() {
-  const seconds = Math.round(
-    (Date.now() - quiz.started) / 1000
-  );
+function finishQuiz() {
 
-  const accuracy = quiz.items.length
-    ? Math.round(
-        (session.correct / session.answered) * 100
+  const seconds =
+    Math.max(
+      0,
+      Math.round(
+        (Date.now() - quiz.started) /
+        1000
       )
-    : 0;
+    );
+
+
+  const accuracy =
+    quiz.items.length
+      ? Math.round(
+          quiz.correct /
+          quiz.items.length *
+          100
+        )
+      : 0;
+
 
   const result = {
-    test: currentTest.title,
-    mode: MODES[currentMode][1],
-    points: quiz.points,
+
+    test:
+      currentTest.title,
+
+    mode:
+      currentMode,
+
+    points:
+      quiz.points,
+
     seconds,
-    questions: quiz.items.length,
-    correct: quiz.items.length - quiz.mistakes.length,
-    wrong: quiz.mistakes.length,
+
+    questions:
+      quiz.items.length,
+
+    correct:
+      quiz.correct,
+
+    wrong:
+      quiz.wrong,
+
     accuracy,
-    bestStreak: quiz.bestStreak,
-    mistakes: quiz.mistakes,
-    date: new Date().toISOString()
+
+    bestStreak:
+      quiz.bestStreak,
+
+    missed:
+      quiz.missed
   };
 
-  // Save local result history
-  const results = get("results", []);
 
-  results.unshift(result);
+  const history =
+    get("results", []);
+
+
+  history.unshift(result);
+
 
   set(
     "results",
-    results.slice(0, 100)
+    history.slice(0, 100)
   );
 
-  // Upload score to Supabase
-  await submitScore(result);
 
-  renderResults();
+  $("resultSubtitle").textContent =
+    `${currentTest.title} · ${
+      currentMode === "multiple"
+        ? "Multiple Choice"
+        : "Enter English"
+    }`;
+
+
+  $("resultStats").innerHTML = `
+
+    <div class="result-stat">
+      <strong>${result.points}</strong>
+      <span>Points</span>
+    </div>
+
+    <div class="result-stat">
+      <strong>${result.accuracy}%</strong>
+      <span>Accuracy</span>
+    </div>
+
+    <div class="result-stat">
+      <strong>
+        ${result.correct}/${result.questions}
+      </strong>
+      <span>Correct</span>
+    </div>
+
+    <div class="result-stat">
+      <strong>${result.wrong}</strong>
+      <span>Wrong</span>
+    </div>
+
+    <div class="result-stat">
+      <strong>
+        ${formatTime(result.seconds)}
+      </strong>
+      <span>Time</span>
+    </div>
+
+    <div class="result-stat">
+      <strong>${result.bestStreak}</strong>
+      <span>Best streak</span>
+    </div>
+
+  `;
+
+
+  if (result.missed.length) {
+
+    $("missedWords").innerHTML =
+      result.missed
+        .map(word => `
+
+          <div class="missed">
+
+            <strong>
+              ${esc(word.fr)}
+            </strong>
+
+            <div class="muted">
+              ${esc(word.en)}
+            </div>
+
+          </div>
+
+        `)
+        .join("");
+
+  } else {
+
+    $("missedWords").innerHTML =
+      `<p class="muted">
+        Perfect — no missed words! 🎉
+      </p>`;
+  }
+
+
+  $("againButton").onclick =
+    () => startQuiz(currentMode);
+
+
+  updateSession();
+
+  renderWordStats();
 
   view("resultsView");
 }
 
 
-// ---------- SUBMIT ONLINE SCORE ----------
+// =====================================================
+// TIME FORMAT
+// =====================================================
 
-async function submitScore(result) {
-  if (!currentUser) {
-    return;
+function formatTime(seconds) {
+
+  if (seconds < 60) {
+    return `${seconds}s`;
   }
 
-  const { error } = await supabase
-    .from("quiz_scores")
-    .insert({
-      user_id: currentUser.id,
-      points: result.points,
-      seconds: result.seconds,
-      questions: result.questions,
-      correct: result.correct,
-      test: result.test,
-      mode: result.mode
-    });
 
-  if (error) {
-    console.error(
-      "Could not submit score:",
-      error
-    );
-  }
+  const minutes =
+    Math.floor(seconds / 60);
+
+
+  const remaining =
+    seconds % 60;
+
+
+  return `${minutes}m ${remaining}s`;
 }
 
 
-// ---------- RESULTS ----------
+// =====================================================
+// PRACTICE MISTAKES
+// =====================================================
 
-function renderResults() {
-  const results = get("results", []);
-  const wordStats = get("wordStats", {});
+function startMistakes() {
 
-  const attempts = Object.values(wordStats)
-    .reduce(
-      (total, stat) => total + stat.attempts,
-      0
-    );
-
-  const correct = Object.values(wordStats)
-    .reduce(
-      (total, stat) => total + stat.correct,
-      0
-    );
-
-  const lifetimePoints = results
-    .reduce(
-      (total, result) => total + result.points,
-      0
-    );
-
-  const lifetimeSeconds = results
-    .reduce(
-      (total, result) => total + result.seconds,
-      0
-    );
-
-  const accuracy = attempts
-    ? Math.round((correct / attempts) * 100)
-    : 0;
-
-  $("summary").innerHTML = [
-    [
-      lifetimePoints,
-      "Lifetime points"
-    ],
-    [
-      time(lifetimeSeconds),
-      "Playtime"
-    ],
-    [
-      `${accuracy}%`,
-      "Word accuracy"
-    ],
-    [
-      attempts,
-      "Word attempts"
-    ]
-  ]
-    .map(stat => `
-      <div class="stat">
-        <b>${stat[0]}</b>
-        <small>${stat[1]}</small>
-      </div>
-    `)
-    .join("");
-
-  $("words").innerHTML =
-    Object.entries(wordStats)
-      .sort(
-        (a, b) =>
-          b[1].attempts - a[1].attempts
-      )
-      .map(([word, stat]) => `
-        <div class="word">
-          <span>
-            ${esc(word)}
-            <small>
-              <br>
-              ${stat.correct}/${stat.attempts} correct
-            </small>
-          </span>
-
-          <b>
-            ${Math.round(
-              stat.correct / stat.attempts * 100
-            )}%
-          </b>
-        </div>
-      `)
-      .join("")
-    ||
-    "<p class='muted'>No attempts yet.</p>";
-}
+  const stats =
+    get("wordStats", {});
 
 
-// ---------- GLOBAL LEADERBOARD ----------
+  const words = {};
 
-async function renderBoard(type) {
-  $("board").innerHTML =
-    "<p class='muted'>Loading leaderboard...</p>";
 
-  const { data, error } = await supabase
-    .from("leaderboard_totals")
-    .select("username, points, seconds");
+  for (const test of TESTS) {
 
-  if (error) {
-    console.error(
-      "Leaderboard error:",
-      error
-    );
+    for (
+      const [fr, en]
+      of Object.entries(test.words)
+    ) {
 
-    $("board").innerHTML =
-      "<p class='muted'>Could not load the leaderboard.</p>";
+      const stat =
+        stats[fr];
 
-    return;
-  }
 
-  const board = [...data]
-    .sort((a, b) => {
+      if (
+        stat &&
+        stat.attempts >
+        stat.correct
+      ) {
 
-      if (type === "points") {
-        return Number(b.points) -
-          Number(a.points);
+        words[fr] = en;
       }
-
-      return Number(b.seconds) -
-        Number(a.seconds);
-    })
-    .slice(0, 20);
-
-  if (!board.length) {
-    $("board").innerHTML =
-      "<p class='muted'>No scores yet. Be the first!</p>";
-
-    return;
+    }
   }
 
-  $("board").innerHTML =
-    board
-      .map((user, index) => `
-        <div class="rank">
-          <b>#${index + 1}</b>
-          <b>${esc(user.username)}</b>
-          <b>
-            ${
-              type === "points"
-                ? `${Number(user.points)} pts`
-                : time(Number(user.seconds))
-            }
-          </b>
-        </div>
-      `)
-      .join("");
-}
-
-
-// ---------- DARK MODE ----------
-
-function setupDarkMode() {
-  $("dark").onclick = () => {
-
-    document.documentElement.classList.toggle(
-      "dark"
-    );
-
-    localStorage.setItem(
-      "dark",
-      document.documentElement.classList.contains("dark")
-        ? "1"
-        : "0"
-    );
-  };
 
   if (
-    localStorage.getItem("dark") === "1"
+    !Object.keys(words).length
   ) {
-    document.documentElement.classList.add(
-      "dark"
+
+    alert(
+      "You don't have any recorded mistakes yet."
     );
+
+    return;
   }
+
+
+  currentTest = {
+
+    id:
+      "mistakes",
+
+    category:
+      "Practice",
+
+    title:
+      "Practice Mistakes",
+
+    description:
+      "Words you have previously got wrong.",
+
+    words
+
+  };
+
+
+  openMode();
 }
 
 
-// ---------- NAVIGATION ----------
+// =====================================================
+// NAVIGATION
+// =====================================================
 
 function setupNavigation() {
+
+  $("testsButton").onclick =
+    () => {
+
+      renderCategories();
+
+      view("categoriesView");
+    };
+
+
+  $("statsButton").onclick =
+    () => {
+
+      renderWordStats();
+
+      view("statsView");
+    };
+
+
   document
-    .querySelectorAll("[data-go]")
-    .forEach(button => {
-
-      button.onclick = () =>
-        view(button.dataset.go);
-    });
-
-  if ($("home")) {
-    $("home").onclick = () =>
-      view("homeView");
-  }
-}
-
-
-// ---------- EVENT LISTENERS ----------
-
-function setupEvents() {
-
-  // Login
-  if ($("login")) {
-    $("login").onclick = login;
-  }
-
-  // Signup
-  if ($("signup")) {
-    $("signup").onclick = signup;
-  }
-
-  // Logout
-  if ($("logout")) {
-    $("logout").onclick = logout;
-  }
-
-  // Signup page
-  if ($("showSignup")) {
-    $("showSignup").onclick = showSignup;
-  }
-
-  // Login page
-  if ($("showLogin")) {
-    $("showLogin").onclick = showLogin;
-  }
-
-  // Practice mistakes
-  if ($("mistakes")) {
-    $("mistakes").onclick =
-      startMistakes;
-  }
-
-  // Leaderboard tabs
-  document
-    .querySelectorAll(".tab")
+    .querySelectorAll("[data-back]")
     .forEach(button => {
 
       button.onclick = () => {
 
-        document
-          .querySelectorAll(".tab")
-          .forEach(tab =>
-            tab.classList.remove("active")
-          );
+        const target =
+          button.dataset.back;
 
-        button.classList.add("active");
 
-        renderBoard(
-          button.dataset.board
+        if (
+          target ===
+          "categoriesView"
+        ) {
+
+          renderCategories();
+        }
+
+
+        if (
+          target ===
+          "testsView" &&
+          currentCategory
+        ) {
+
+          renderTests();
+        }
+
+
+        view(target);
+      };
+    });
+
+
+  $("exitQuiz").onclick =
+    () => {
+
+      view("homeView");
+    };
+}
+
+
+// =====================================================
+// EVENTS
+// =====================================================
+
+function setupEvents() {
+
+  $("categorySearch").oninput =
+    renderCategories;
+
+
+  $("wordSearch").oninput =
+    renderWordStats;
+
+
+  document
+    .querySelectorAll(".mode-card")
+    .forEach(button => {
+
+      button.onclick = () => {
+
+        startQuiz(
+          button.dataset.mode
         );
       };
     });
 
-  // Clear local statistics
-  if ($("clear")) {
-    $("clear").onclick = () => {
 
-      if (
-        confirm(
-          "Clear local results and word statistics?"
-        )
-      ) {
-        localStorage.removeItem(
-          "results"
-        );
-
-        localStorage.removeItem(
-          "wordStats"
-        );
-
-        renderResults();
-      }
-    };
-  }
+  $("mistakesButton").onclick =
+    startMistakes;
 }
 
 
-// ---------- STARTUP ----------
+// =====================================================
+// START APP
+// =====================================================
 
-async function init() {
-  renderTests();
-
-  renderResults();
-
-  updateSession();
+function init() {
 
   setupDarkMode();
 
@@ -1051,39 +1508,12 @@ async function init() {
 
   setupEvents();
 
-  // Check whether user is already logged in
-  await checkAuth();
+  renderCategories();
 
-  // Listen for login/logout changes
-  supabase.auth.onAuthStateChange(
-    async (event, session) => {
+  renderWordStats();
 
-      if (session?.user) {
-        currentUser = session.user;
-
-        await loadProfile();
-
-        if (
-          event === "SIGNED_IN"
-        ) {
-          showLoggedIn();
-        }
-
-      } else if (
-        event === "SIGNED_OUT"
-      ) {
-        currentUser = null;
-        currentProfile = null;
-
-        showLogin();
-      }
-    }
-  );
-
-  // Initial leaderboard
-  if ($("board")) {
-    renderBoard("points");
-  }
+  updateSession();
 }
+
 
 init();
