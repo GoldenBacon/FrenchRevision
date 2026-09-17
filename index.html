@@ -2,658 +2,465 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <meta
-    name="theme-color"
-    content="#2563eb"
-  >
-
+  <meta name="theme-color" content="#2563eb">
   <meta
     name="description"
-    content="French vocabulary revision quiz"
+    content="French vocabulary revision"
   >
 
-  <link
-    rel="manifest"
-    href="manifest.json"
-  >
-
-  <link
-    rel="stylesheet"
-    href="style.css"
-  >
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
 
   <title>French Revision</title>
 </head>
 
 <body>
 
-  <!-- ========================================= -->
-  <!-- LOGIN -->
-  <!-- ========================================= -->
-
-  <main id="loginView" class="view active">
-    <section class="auth-card">
-
+  <!-- HEADER -->
+  <header class="topbar">
+    <div>
       <h1>🇫🇷 French Revision</h1>
-
-      <p class="muted">
-        Log in to save your progress and compete
-        on the global leaderboard.
-      </p>
-
-      <label for="loginEmail">
-        Email
-      </label>
-
-      <input
-        id="loginEmail"
-        type="email"
-        placeholder="Email"
-        autocomplete="email"
-      >
-
-      <label for="loginPassword">
-        Password
-      </label>
-
-      <input
-        id="loginPassword"
-        type="password"
-        placeholder="Password"
-        autocomplete="current-password"
-      >
-
-      <button
-        id="login"
-        class="primary"
-      >
-        Log In
-      </button>
-
-      <p
-        id="loginMsg"
-        class="message"
-      ></p>
-
-      <button
-        id="showSignup"
-        class="link-button"
-      >
-        Don't have an account? Sign up
-      </button>
-
-    </section>
-  </main>
-
-
-  <!-- ========================================= -->
-  <!-- SIGN UP -->
-  <!-- ========================================= -->
-
-  <main id="signupView" class="view">
-    <section class="auth-card">
-
-      <h1>🇫🇷 Create Account</h1>
-
-      <p class="muted">
-        Choose a unique username to appear
-        on the global leaderboard.
-      </p>
-
-      <label for="signupUsername">
-        Username
-      </label>
-
-      <input
-        id="signupUsername"
-        type="text"
-        placeholder="Username"
-        maxlength="20"
-        autocomplete="username"
-      >
-
-      <small class="muted">
-        3–20 characters. Letters, numbers and _
-        only.
-      </small>
-
-      <label for="signupEmail">
-        Email
-      </label>
-
-      <input
-        id="signupEmail"
-        type="email"
-        placeholder="Email"
-        autocomplete="email"
-      >
-
-      <label for="signupPassword">
-        Password
-      </label>
-
-      <input
-        id="signupPassword"
-        type="password"
-        placeholder="Password"
-        autocomplete="new-password"
-      >
-
-      <label for="signupPassword2">
-        Confirm Password
-      </label>
-
-      <input
-        id="signupPassword2"
-        type="password"
-        placeholder="Confirm password"
-        autocomplete="new-password"
-      >
-
-      <button
-        id="signup"
-        class="primary"
-      >
-        Create Account
-      </button>
-
-      <p
-        id="signupMsg"
-        class="message"
-      ></p>
-
-      <button
-        id="showLogin"
-        class="link-button"
-      >
-        Already have an account? Log in
-      </button>
-
-    </section>
-  </main>
-
-
-  <!-- ========================================= -->
-  <!-- HOME -->
-  <!-- ========================================= -->
-
-  <main id="homeView" class="view">
-
-    <header class="topbar">
-
-      <div>
-        <h1>🇫🇷 French Revision</h1>
-
-        <p class="muted">
-          Test your French vocabulary
-        </p>
-      </div>
-
-      <button
-        id="dark"
-        class="icon-button"
-        aria-label="Toggle dark mode"
-      >
-        🌙
-      </button>
-
-    </header>
-
-
-    <!-- ACCOUNT BAR -->
-
-    <section class="account-bar">
-
-      <div>
-        <small class="muted">
-          Logged in as
-        </small>
-
-        <strong id="currentUsername">
-          Loading...
-        </strong>
-      </div>
-
-      <button
-        id="logout"
-        class="secondary"
-      >
-        Log Out
-      </button>
-
-    </section>
-
-
-    <!-- SESSION -->
-
-    <section class="session-card">
-
-      <strong>
-        Current session
-      </strong>
-
-      <span id="session">
-        0 answered · 0% accuracy
-      </span>
-
-    </section>
-
-
-    <!-- NAVIGATION -->
-
-    <nav class="nav-grid">
-
-      <button
-        class="card"
-        data-go="leaderboardView"
-      >
-        🏆
-        <b>Leaderboard</b>
-        <small>See the global rankings</small>
-      </button>
-
-      <button
-        class="card"
-        data-go="resultsView"
-      >
-        📊
-        <b>Results</b>
-        <small>See your statistics</small>
-      </button>
-
-    </nav>
-
-
-    <!-- TESTS -->
-
-    <section>
-
-      <h2>Choose a Test</h2>
-
-      <div
-        id="tests"
-        class="grid"
-      ></div>
-
-    </section>
-
-
-    <!-- PRACTICE MISTAKES -->
-
-    <section class="practice-section">
-
-      <button
-        id="mistakes"
-        class="card special-card"
-      >
-        <span>🔁</span>
-
-        <b>Practice Mistakes</b>
-
-        <small>
-          Practise words you've previously
-          got wrong.
-        </small>
-      </button>
-
-    </section>
-
-  </main>
-
-
-  <!-- ========================================= -->
-  <!-- MODE SELECTION -->
-  <!-- ========================================= -->
-
-  <main id="modeView" class="view">
+      <p>French vocabulary practice</p>
+    </div>
 
     <button
-      class="back"
-      data-go="homeView"
+      id="darkToggle"
+      class="icon-button"
+      aria-label="Toggle dark mode"
     >
-      ← Back
+      🌙
     </button>
+  </header>
 
-    <section class="page-heading">
 
-      <h1 id="testName">
-        Test
-      </h1>
+  <main>
 
-      <p class="muted">
-        Choose how you want to practise.
-      </p>
+    <!-- ========================= -->
+    <!-- HOME -->
+    <!-- ========================= -->
+
+    <section id="homeView" class="view active">
+
+      <section class="session-card">
+        <h2>Current Session</h2>
+
+        <div class="session-stats">
+
+          <div>
+            <strong id="sessionAnswered">0</strong>
+            <span>Answered</span>
+          </div>
+
+          <div>
+            <strong id="sessionAccuracy">0%</strong>
+            <span>Accuracy</span>
+          </div>
+
+          <div>
+            <strong id="sessionPoints">0</strong>
+            <span>Points</span>
+          </div>
+
+        </div>
+      </section>
+
+
+      <div class="home-grid">
+
+        <button
+          class="nav-card"
+          id="testsButton"
+        >
+          <span>📚</span>
+          <b>Tests</b>
+          <small>Choose a category and test</small>
+        </button>
+
+
+        <button
+          class="nav-card"
+          id="statsButton"
+        >
+          <span>📊</span>
+          <b>Word Accuracy</b>
+          <small>See your accuracy for every word</small>
+        </button>
+
+      </div>
+
+
+      <section class="panel">
+
+        <h2>Practice Mistakes</h2>
+
+        <button
+          id="mistakesButton"
+          class="primary wide"
+        >
+          🔁 Practice Mistakes
+        </button>
+
+        <p
+          id="mistakesInfo"
+          class="muted"
+        ></p>
+
+      </section>
 
     </section>
 
 
-    <!-- QUESTION COUNT -->
+    <!-- ========================= -->
+    <!-- CATEGORIES -->
+    <!-- ========================= -->
 
-    <section class="count-section">
-
-      <h2>Number of Questions</h2>
-
-      <select id="questionCount">
-
-        <option value="10">
-          10 Questions
-        </option>
-
-        <option value="20">
-          20 Questions
-        </option>
-
-        <option value="30">
-          30 Questions
-        </option>
-
-        <option value="all" selected>
-          All Questions
-        </option>
-
-      </select>
-
-    </section>
-
-
-    <!-- MODES -->
-
-    <section>
-
-      <h2>Game Mode</h2>
-
-      <div
-        id="modes"
-        class="grid"
-      ></div>
-
-    </section>
-
-  </main>
-
-
-  <!-- ========================================= -->
-  <!-- QUIZ -->
-  <!-- ========================================= -->
-
-  <main id="quizView" class="view">
-
-    <header class="quiz-header">
+    <section id="categoriesView" class="view">
 
       <button
         class="back"
-        data-go="homeView"
+        data-back="homeView"
       >
-        ← Exit
+        ← Home
       </button>
 
-      <span id="modeLabel">
-        Multiple Choice
-      </span>
 
-      <strong id="points">
-        0 pts
-      </strong>
+      <div class="heading">
 
-    </header>
+        <h2>Test Categories</h2>
 
+        <p>
+          Choose a category to see its tests.
+        </p>
 
-    <!-- PROGRESS -->
-
-    <div class="progress-row">
-
-      <span>
-        Question
-      </span>
-
-      <strong id="progress">
-        1/10
-      </strong>
-
-    </div>
+      </div>
 
 
-    <!-- QUESTION -->
+      <input
+        id="categorySearch"
+        class="search"
+        type="search"
+        placeholder="🔎 Search categories..."
+        autocomplete="off"
+      >
 
-    <section class="question-card">
-
-      <p class="muted">
-        What does this mean?
-      </p>
-
-      <h1 id="question">
-        Question
-      </h1>
-
-    </section>
-
-
-    <!-- ANSWERS -->
-
-    <section
-      id="answers"
-      class="answers"
-    ></section>
-
-
-    <!-- FEEDBACK -->
-
-    <p
-      id="feedback"
-      class="feedback"
-    ></p>
-
-
-    <!-- NEXT -->
-
-    <button
-      id="next"
-      class="primary hidden"
-    >
-      Next →
-    </button>
-
-  </main>
-
-
-  <!-- ========================================= -->
-  <!-- RESULTS -->
-  <!-- ========================================= -->
-
-  <main id="resultsView" class="view">
-
-    <button
-      class="back"
-      data-go="homeView"
-    >
-      ← Home
-    </button>
-
-    <section class="page-heading">
-
-      <h1>📊 Your Results</h1>
-
-      <p class="muted">
-        Your progress and vocabulary statistics.
-      </p>
-
-    </section>
-
-
-    <!-- SUMMARY -->
-
-    <section
-      id="summary"
-      class="stats-grid"
-    ></section>
-
-
-    <!-- WORD STATISTICS -->
-
-    <section>
-
-      <h2>Word Statistics</h2>
 
       <div
-        id="words"
+        id="categories"
+        class="card-list"
+      ></div>
+
+    </section>
+
+
+    <!-- ========================= -->
+    <!-- TEST LIST -->
+    <!-- ========================= -->
+
+    <section id="testsView" class="view">
+
+      <button
+        class="back"
+        data-back="categoriesView"
+      >
+        ← Categories
+      </button>
+
+
+      <div class="heading">
+
+        <h2 id="categoryTitle">
+          Tests
+        </h2>
+
+        <p>
+          Choose a test or test everything in this category.
+        </p>
+
+      </div>
+
+
+      <!-- ALL TESTS BUTTON -->
+
+      <div id="allTestContainer"></div>
+
+
+      <!-- INDIVIDUAL TESTS -->
+
+      <div
+        id="tests"
+        class="card-list"
+      ></div>
+
+    </section>
+
+
+    <!-- ========================= -->
+    <!-- MODE SELECTION -->
+    <!-- ========================= -->
+
+    <section id="modeView" class="view">
+
+      <button
+        class="back"
+        data-back="testsView"
+      >
+        ← Tests
+      </button>
+
+
+      <div class="heading">
+
+        <h2 id="testTitle">
+          Test
+        </h2>
+
+        <p id="testDescription">
+          Choose a revision mode.
+        </p>
+
+      </div>
+
+
+      <div class="mode-grid">
+
+        <button
+          class="mode-card"
+          data-mode="multiple"
+        >
+
+          <span>🔘</span>
+
+          <b>
+            Multiple Choice
+          </b>
+
+          <small>
+            Pick the correct English meaning.
+          </small>
+
+        </button>
+
+
+        <button
+          class="mode-card"
+          data-mode="typing"
+        >
+
+          <span>⌨️</span>
+
+          <b>
+            Enter English
+          </b>
+
+          <small>
+            Type the English meaning yourself.
+          </small>
+
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- ========================= -->
+    <!-- QUIZ -->
+    <!-- ========================= -->
+
+    <section id="quizView" class="view">
+
+      <div class="quiz-header">
+
+        <button
+          id="exitQuiz"
+          class="back"
+        >
+          ← Exit
+        </button>
+
+
+        <span id="quizMode">
+          Multiple Choice
+        </span>
+
+
+        <strong id="quizPoints">
+          0 pts
+        </strong>
+
+      </div>
+
+
+      <!-- PROGRESS -->
+
+      <div class="progress-area">
+
+        <div class="progress-text">
+          <span>
+            Question
+          </span>
+
+          <strong id="quizProgress">
+            1/10
+          </strong>
+        </div>
+
+
+        <div class="progress-bar">
+
+          <div
+            id="progressFill"
+          ></div>
+
+        </div>
+
+      </div>
+
+
+      <!-- QUESTION -->
+
+      <section class="question-card">
+
+        <p>
+          What does this mean?
+        </p>
+
+        <h2 id="question">
+          Question
+        </h2>
+
+      </section>
+
+
+      <!-- ANSWERS -->
+
+      <div
+        id="answers"
+        class="answers"
+      ></div>
+
+
+      <!-- FEEDBACK -->
+
+      <p
+        id="feedback"
+        class="feedback"
+      ></p>
+
+
+      <!-- NEXT -->
+
+      <button
+        id="nextButton"
+        class="primary wide hidden"
+      >
+        Next →
+      </button>
+
+    </section>
+
+
+    <!-- ========================= -->
+    <!-- RESULTS -->
+    <!-- ========================= -->
+
+    <section id="resultsView" class="view">
+
+      <button
+        class="back"
+        data-back="homeView"
+      >
+        ← Home
+      </button>
+
+
+      <div class="heading">
+
+        <h2>📊 Results</h2>
+
+        <p id="resultSubtitle"></p>
+
+      </div>
+
+
+      <div
+        id="resultStats"
+        class="result-grid"
+      ></div>
+
+
+      <section class="panel">
+
+        <h3>
+          Words to practise
+        </h3>
+
+        <div
+          id="missedWords"
+        ></div>
+
+      </section>
+
+
+      <button
+        id="againButton"
+        class="primary wide"
+      >
+        Try Again
+      </button>
+
+    </section>
+
+
+    <!-- ========================= -->
+    <!-- WORD ACCURACY -->
+    <!-- ========================= -->
+
+    <section id="statsView" class="view">
+
+      <button
+        class="back"
+        data-back="homeView"
+      >
+        ← Home
+      </button>
+
+
+      <div class="heading">
+
+        <h2>📊 Word Accuracy</h2>
+
+        <p>
+          Your attempts and accuracy are saved on this device.
+        </p>
+
+      </div>
+
+
+      <input
+        id="wordSearch"
+        class="search"
+        type="search"
+        placeholder="🔎 Search French or English..."
+        autocomplete="off"
+      >
+
+
+      <div
+        id="wordStats"
         class="word-list"
       ></div>
 
     </section>
 
-
-    <!-- CLEAR LOCAL DATA -->
-
-    <section class="danger-section">
-
-      <button
-        id="clear"
-        class="secondary"
-      >
-        Clear Local Statistics
-      </button>
-
-    </section>
-
   </main>
 
 
-  <!-- ========================================= -->
-  <!-- LEADERBOARD -->
-  <!-- ========================================= -->
+  <!-- APP SCRIPT -->
 
-  <main id="leaderboardView" class="view">
-
-    <button
-      class="back"
-      data-go="homeView"
-    >
-      ← Home
-    </button>
-
-    <section class="page-heading">
-
-      <h1>🏆 Global Leaderboard</h1>
-
-      <p class="muted">
-        Compete with everyone using the app.
-      </p>
-
-    </section>
-
-
-    <!-- LEADERBOARD TABS -->
-
-    <div class="tabs">
-
-      <button
-        class="tab active"
-        data-board="points"
-      >
-        ⭐ Points
-      </button>
-
-      <button
-        class="tab"
-        data-board="time"
-      >
-        ⏱️ Playtime
-      </button>
-
-    </div>
-
-
-    <!-- LEADERBOARD -->
-
-    <section
-      id="board"
-      class="leaderboard"
-    >
-      <p class="muted">
-        Loading leaderboard...
-      </p>
-    </section>
-
-  </main>
-
-
-  <!-- ========================================= -->
-  <!-- SETTINGS -->
-  <!-- ========================================= -->
-
-  <main id="settingsView" class="view">
-
-    <button
-      class="back"
-      data-go="homeView"
-    >
-      ← Home
-    </button>
-
-    <section class="page-heading">
-
-      <h1>⚙️ Settings</h1>
-
-    </section>
-
-
-    <section class="settings-card">
-
-      <label for="settingsUsername">
-        Username
-      </label>
-
-      <input
-        id="settingsUsername"
-        type="text"
-        readonly
-      >
-
-      <small class="muted">
-        Your username is permanent and unique.
-      </small>
-
-
-      <label for="settingsEmail">
-        Email
-      </label>
-
-      <input
-        id="settingsEmail"
-        type="email"
-        readonly
-      >
-
-    </section>
-
-
-    <button
-      id="settingsLogout"
-      class="secondary"
-    >
-      Log Out
-    </button>
-
-  </main>
-
-
-  <!-- ========================================= -->
-  <!-- SCRIPTS -->
-  <!-- ========================================= -->
-
-  <!-- Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <!-- Your vocabulary/tests -->
   <script src="tests.js"></script>
-
-  <!-- Your app -->
   <script src="app.js"></script>
 
 </body>
