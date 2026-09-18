@@ -348,6 +348,112 @@ const TESTS = [
         "according to"
 
     }
+  },
+
+    // ===================================================
+  // TEST D — OPINION VERBS
+  // ===================================================
+
+  {
+    category: "Opinions & Feelings",
+
+    id: "test-d",
+
+    title: "Test D - Opinion Verbs",
+
+    description:
+      "Opinion verbs and useful expressions.",
+
+    words: {
+
+      "adorer":
+        "to love",
+
+      "aimer":
+        "to like",
+
+      "apprécier":
+        "to appreciate",
+
+      "avouer":
+        "to admit/confess",
+
+      "croire":
+        "to believe",
+
+      "désirer":
+        "to want",
+
+      "détester":
+        "to hate",
+
+      "espérer":
+        "to hope",
+
+      "être d'accord":
+        "to agree",
+
+      "penser":
+        "to think",
+
+      "préférer":
+        "to prefer",
+
+      "réfléchir":
+        "to think about/to reflect",
+
+      "rêver":
+        "to dream",
+
+      "rire":
+        "to laugh",
+
+      "sembler":
+        "to seem",
+
+      "souffrir":
+        "to suffer",
+
+      "sourire":
+        "to smile",
+
+      "supporter":
+        "to put up with",
+
+      "vouloir":
+        "to want",
+
+      "ça m'est égal":
+        "it doesn't bother me",
+
+      "ça me fait rire":
+        "it makes me laugh",
+
+      "ça me fait sourire":
+        "it makes me smile",
+
+      "ça m'intéresse":
+        "it interests me",
+
+      "ça semble":
+        "it seems",
+
+      "il manque":
+        "...is missing",
+
+      "il vaut mieux":
+        "it's better to",
+
+      "quel dommage":
+        "what a shame",
+
+      "je me sens":
+        "I feel",
+
+      "je ne sais pas":
+        "I don't know"
+
+    }
   }
 
 ];
