@@ -1,63 +1,58 @@
-const CACHE_NAME = "french-revision-v1";
+const CACHE_NAME = "french-revision-v2";
 
 const APP_FILES = [
-  "./",
-  "./index.html",
-  "./style.css",
-  "./tests.js",
-  "./app.js",
-  "./manifest.json",
-  "./icon-192.png",
-  "./icon-512.png"
+    "./",
+    "./index.html",
+    "./style.css",
+    "./tests.js",
+    "./app.js",
+    "./manifest.json",
+    "./icon-192.png",
+    "./icon-512.png"
 ];
 
 self.addEventListener("install", event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(APP_FILES);
-    })
-  );
+    event.waitUntil(
+        caches.open(CACHE_NAME).then(cache => {
+            return cache.addAll(APP_FILES);
+        })
+    );
 
-  self.skipWaiting();
+    self.skipWaiting();
 });
 
 self.addEventListener("activate", event => {
-  event.waitUntil(
-    caches.keys().then(keys => {
-      return Promise.all(
-        keys
-          .filter(key => key !== CACHE_NAME)
-          .map(key => caches.delete(key))
-      );
-    })
-  );
+    event.waitUntil(
+        caches.keys().then(keys => {
+            return Promise.all(
+                keys
+                    .filter(key => key !== CACHE_NAME)
+                    .map(key => caches.delete(key))
+            );
+        })
+    );
 
-  self.clients.claim();
+    self.clients.claim();
 });
 
 self.addEventListener("fetch", event => {
-  if (event.request.method !== "GET") {
-    return;
-  }
+    if (event.request.method !== "GET") {
+        return;
+    }
 
-  event.respondWith(
-    caches.match(event.request).then(cachedResponse => {
+    event.respondWith(
+        fetch(event.request)
+            .then(response => {
+                const copy = response.clone();
 
-      if (cachedResponse) {
-        return cachedResponse;
-      }
+                caches.open(CACHE_NAME).then(cache => {
+                    cache.put(event.request, copy);
+                });
 
-      return fetch(event.request).then(response => {
-
-        const copy = response.clone();
-
-        caches.open(CACHE_NAME).then(cache => {
-          cache.put(event.request, copy);
-        });
-
-        return response;
-      });
-
-    })
-  );
+                return response;
+            })
+            .catch(() => {
+                return caches.match(event.request);
+            })
+    );
 });
