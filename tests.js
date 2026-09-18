@@ -454,6 +454,6 @@ const TESTS = [
         "I don't know"
 
     }
-  }
+  },
 
 ];
