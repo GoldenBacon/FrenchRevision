@@ -1,490 +1,466 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <meta name="theme-color" content="#2563eb">
-  <meta
-    name="description"
-    content="French vocabulary revision"
-  >
+    <meta name="theme-color" content="#2563eb">
+    <meta
+        name="description"
+        content="French vocabulary revision"
+    >
 
-  <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
 
-  <title>French Revision</title>
+    <title>French Revision</title>
 </head>
 
 <body>
 
-  <!-- HEADER -->
-  <header class="topbar">
-    <div>
-      <h1>🇫🇷 French Revision</h1>
-      <p>French vocabulary practice</p>
-    </div>
-
-    <button
-      id="darkToggle"
-      class="icon-button"
-      aria-label="Toggle dark mode"
-    >
-      🌙
-    </button>
-  </header>
-
-
-  <main>
-
-    <!-- ========================= -->
-    <!-- HOME -->
-    <!-- ========================= -->
-
-    <section id="homeView" class="view active">
-
-      <section class="session-card">
-        <h2>Current Session</h2>
-
-        <div class="session-stats">
-
-          <div>
-            <strong id="sessionAnswered">0</strong>
-            <span>Answered</span>
-          </div>
-
-          <div>
-            <strong id="sessionAccuracy">0%</strong>
-            <span>Accuracy</span>
-          </div>
-
-          <div>
-            <strong id="sessionPoints">0</strong>
-            <span>Points</span>
-          </div>
-
-        </div>
-      </section>
-
-
-      <div class="home-grid">
-
-        <button
-          class="nav-card"
-          id="testsButton"
-        >
-          <span>📚</span>
-          <b>Tests</b>
-          <small>Choose a category and test</small>
-        </button>
-
-
-        <button
-          class="nav-card"
-          id="statsButton"
-        >
-          <span>📊</span>
-          <b>Word Accuracy</b>
-          <small>See your accuracy for every word</small>
-        </button>
-
-      </div>
-
-
-      <section class="panel">
-
-        <h2>Practice Mistakes</h2>
-
-        <button
-          id="mistakesButton"
-          class="primary wide"
-        >
-          🔁 Practice Mistakes
-        </button>
-
-        <p
-          id="mistakesInfo"
-          class="muted"
-        ></p>
-
-      </section>
-
-    </section>
-
-
-    <!-- ========================= -->
-    <!-- CATEGORIES -->
-    <!-- ========================= -->
-
-    <section id="categoriesView" class="view">
-
-      <button
-        class="back"
-        data-back="homeView"
-      >
-        ← Home
-      </button>
-
-
-      <div class="heading">
-
-        <h2>Test Categories</h2>
-
-        <p>
-          Choose a category to see its tests.
-        </p>
-
-      </div>
-
-
-      <input
-        id="categorySearch"
-        class="search"
-        type="search"
-        placeholder="🔎 Search categories..."
-        autocomplete="off"
-      >
-
-
-      <div
-        id="categories"
-        class="card-list"
-      ></div>
-
-    </section>
-
-
-    <!-- ========================= -->
-    <!-- TEST LIST -->
-    <!-- ========================= -->
-
-    <section id="testsView" class="view">
-
-      <button
-        class="back"
-        data-back="categoriesView"
-      >
-        ← Categories
-      </button>
-
-
-      <div class="heading">
-
-        <h2 id="categoryTitle">
-          Tests
-        </h2>
-
-        <p>
-          Choose a test or test everything in this category.
-        </p>
-
-      </div>
-
-
-      <!-- ALL TESTS BUTTON -->
-
-      <div id="allTestContainer"></div>
-
-
-      <!-- INDIVIDUAL TESTS -->
-
-      <div
-        id="tests"
-        class="card-list"
-      ></div>
-
-    </section>
-
-
-    <!-- ========================= -->
-    <!-- MODE SELECTION -->
-    <!-- ========================= -->
-
-    <section id="modeView" class="view">
-
-      <button
-        class="back"
-        data-back="testsView"
-      >
-        ← Tests
-      </button>
-
-
-     <div class="mode-grid">
-
-  <button
-    class="mode-card"
-    data-mode="multiple"
-  >
-
-    <span>🔘</span>
-
-    <b>
-      Multiple Choice
-    </b>
-
-    <small>
-      Pick the correct English meaning.
-    </small>
-
-  </button>
-
-
-  <button
-    class="mode-card"
-    data-mode="typing"
-  >
-
-    <span>⌨️</span>
-
-    <b>
-      Enter English
-    </b>
-
-    <small>
-      Type the English meaning yourself.
-    </small>
-
-  </button>
-
-
-  <button
-    class="mode-card rapid-card"
-    data-mode="rapid-multiple"
-  >
-
-    <span>⚡</span>
-
-    <b>
-      Rapid Fire — Multiple Choice
-    </b>
-
-    <small>
-      Answer as quickly as possible. No feedback until the end.
-    </small>
-
-  </button>
-
-
-  <button
-    class="mode-card rapid-card"
-    data-mode="rapid-typing"
-  >
-
-    <span>⚡⌨️</span>
-
-        <b>
-          Rapid Fire — Enter English
-        </b>
-
-        <small>
-         Type your answer and press Enter. No feedback until the end.
-        </small>
-
-      </button>
-
-     </div>
-
-    </section>
-
-
-    <!-- ========================= -->
-    <!-- QUIZ -->
-    <!-- ========================= -->
-
-    <section id="quizView" class="view">
-
-      <div class="quiz-header">
-
-        <button
-          id="exitQuiz"
-          class="back"
-        >
-          ← Exit
-        </button>
-
-
-        <span id="quizMode">
-          Multiple Choice
-        </span>
-
-
-        <strong id="quizPoints">
-          0 pts
-        </strong>
-
-      </div>
-
-
-      <!-- PROGRESS -->
-
-      <div class="progress-area">
-
-        <div class="progress-text">
-          <span>
-            Question
-          </span>
-
-          <strong id="quizProgress">
-            1/10
-          </strong>
+    <!-- HEADER -->
+    <header class="topbar">
+        <div>
+            <h1>🇫🇷 French Revision</h1>
+            <p>French vocabulary practice</p>
         </div>
 
+        <button
+            id="darkToggle"
+            class="icon-button"
+            aria-label="Toggle dark mode"
+        >
+            🌙
+        </button>
+    </header>
 
-        <div class="progress-bar">
+    <main>
 
-          <div
-            id="progressFill"
-          ></div>
+        <!-- ========================= -->
+        <!-- HOME -->
+        <!-- ========================= -->
 
-        </div>
+        <section id="homeView" class="view active">
 
-      </div>
+            <section class="session-card">
+                <h2>Current Session</h2>
 
+                <div class="session-stats">
 
-      <!-- QUESTION -->
+                    <div>
+                        <strong id="sessionAnswered">0</strong>
+                        <span>Answered</span>
+                    </div>
 
-      <section class="question-card">
+                    <div>
+                        <strong id="sessionAccuracy">0%</strong>
+                        <span>Accuracy</span>
+                    </div>
 
-        <p>
-          What does this mean?
-        </p>
+                    <div>
+                        <strong id="sessionPoints">0</strong>
+                        <span>Points</span>
+                    </div>
 
-        <h2 id="question">
-          Question
-        </h2>
+                </div>
+            </section>
 
-      </section>
+            <div class="home-grid">
 
+                <button
+                    class="nav-card"
+                    id="testsButton"
+                >
+                    <span>📚</span>
+                    <b>Tests</b>
+                    <small>Choose a category and test</small>
+                </button>
 
-      <!-- ANSWERS -->
+                <button
+                    class="nav-card"
+                    id="statsButton"
+                >
+                    <span>📊</span>
+                    <b>Word Accuracy</b>
+                    <small>See your accuracy for every word</small>
+                </button>
 
-      <div
-        id="answers"
-        class="answers"
-      ></div>
+            </div>
 
+            <section class="panel">
 
-      <!-- FEEDBACK -->
+                <h2>Practice Mistakes</h2>
 
-      <p
-        id="feedback"
-        class="feedback"
-      ></p>
+                <button
+                    id="mistakesButton"
+                    class="primary wide"
+                >
+                    🔁 Practice Mistakes
+                </button>
 
+                <p
+                    id="mistakesInfo"
+                    class="muted"
+                ></p>
 
-      <!-- NEXT -->
+            </section>
 
-      <button
-        id="nextButton"
-        class="primary wide hidden"
-      >
-        Next →
-      </button>
-
-    </section>
-
-
-    <!-- ========================= -->
-    <!-- RESULTS -->
-    <!-- ========================= -->
-
-    <section id="resultsView" class="view">
-
-      <button
-        class="back"
-        data-back="homeView"
-      >
-        ← Home
-      </button>
-
-
-      <div class="heading">
-
-        <h2>📊 Results</h2>
-
-        <p id="resultSubtitle"></p>
-
-      </div>
-
-
-      <div
-        id="resultStats"
-        class="result-grid"
-      ></div>
-
-
-      <section class="panel">
-
-        <h3>
-          Words to practise
-        </h3>
-
-        <div
-          id="missedWords"
-        ></div>
-
-      </section>
+        </section>
 
 
-      <button
-        id="againButton"
-        class="primary wide"
-      >
-        Try Again
-      </button>
+        <!-- ========================= -->
+        <!-- CATEGORIES -->
+        <!-- ========================= -->
 
-    </section>
+        <section id="categoriesView" class="view">
 
+            <button
+                class="back"
+                data-back="homeView"
+            >
+                ← Home
+            </button>
 
-    <!-- ========================= -->
-    <!-- WORD ACCURACY -->
-    <!-- ========================= -->
+            <div class="heading">
 
-    <section id="statsView" class="view">
+                <h2>Test Categories</h2>
 
-      <button
-        class="back"
-        data-back="homeView"
-      >
-        ← Home
-      </button>
+                <p>
+                    Choose a category to see its tests.
+                </p>
 
+            </div>
 
-      <div class="heading">
+            <input
+                id="categorySearch"
+                class="search"
+                type="search"
+                placeholder="🔎 Search categories..."
+                autocomplete="off"
+            >
 
-        <h2>📊 Word Accuracy</h2>
+            <div
+                id="categories"
+                class="card-list"
+            ></div>
 
-        <p>
-          Your attempts and accuracy are saved on this device.
-        </p>
-
-      </div>
-
-
-      <input
-        id="wordSearch"
-        class="search"
-        type="search"
-        placeholder="🔎 Search French or English..."
-        autocomplete="off"
-      >
+        </section>
 
 
-      <div
-        id="wordStats"
-        class="word-list"
-      ></div>
+        <!-- ========================= -->
+        <!-- TEST LIST -->
+        <!-- ========================= -->
 
-    </section>
+        <section id="testsView" class="view">
 
-  </main>
+            <button
+                class="back"
+                data-back="categoriesView"
+            >
+                ← Categories
+            </button>
+
+            <div class="heading">
+
+                <h2 id="categoryTitle">
+                    Tests
+                </h2>
+
+                <p>
+                    Choose a test or test everything in this category.
+                </p>
+
+            </div>
+
+            <!-- ALL TESTS BUTTON -->
+
+            <div id="allTestContainer"></div>
+
+            <!-- INDIVIDUAL TESTS -->
+
+            <div
+                id="tests"
+                class="card-list"
+            ></div>
+
+        </section>
 
 
-  <!-- APP SCRIPT -->
+        <!-- ========================= -->
+        <!-- MODE SELECTION -->
+        <!-- ========================= -->
 
-  <script src="tests.js"></script>
-  <script src="app.js"></script>
+        <section id="modeView" class="view">
+
+            <button
+                class="back"
+                data-back="testsView"
+            >
+                ← Tests
+            </button>
+
+            <div class="heading">
+
+                <h2 id="testTitle">
+                    Test
+                </h2>
+
+                <p id="testDescription">
+                    Choose a revision mode.
+                </p>
+
+            </div>
+
+            <div class="mode-grid">
+
+                <button
+                    class="mode-card"
+                    data-mode="multiple"
+                >
+                    <span>🔘</span>
+
+                    <b>
+                        Multiple Choice
+                    </b>
+
+                    <small>
+                        Pick the correct English meaning.
+                    </small>
+                </button>
+
+                <button
+                    class="mode-card"
+                    data-mode="typing"
+                >
+                    <span>⌨️</span>
+
+                    <b>
+                        Enter English
+                    </b>
+
+                    <small>
+                        Type the English meaning yourself.
+                    </small>
+                </button>
+
+                <button
+                    class="mode-card rapid-card"
+                    data-mode="rapid-multiple"
+                >
+                    <span>⚡</span>
+
+                    <b>
+                        Rapid Fire — Multiple Choice
+                    </b>
+
+                    <small>
+                        Answer as quickly as possible. No feedback until the end.
+                    </small>
+                </button>
+
+                <button
+                    class="mode-card rapid-card"
+                    data-mode="rapid-typing"
+                >
+                    <span>⚡⌨️</span>
+
+                    <b>
+                        Rapid Fire — Enter English
+                    </b>
+
+                    <small>
+                        Type your answer and press Enter. No feedback until the end.
+                    </small>
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- ========================= -->
+        <!-- QUIZ -->
+        <!-- ========================= -->
+
+        <section id="quizView" class="view">
+
+            <div class="quiz-header">
+
+                <button
+                    id="exitQuiz"
+                    class="back"
+                >
+                    ← Exit
+                </button>
+
+                <span id="quizMode">
+                    Multiple Choice
+                </span>
+
+                <strong id="quizPoints">
+                    0 pts
+                </strong>
+
+            </div>
+
+            <!-- PROGRESS -->
+
+            <div class="progress-area">
+
+                <div class="progress-text">
+
+                    <span>
+                        Question
+                    </span>
+
+                    <strong id="quizProgress">
+                        1/10
+                    </strong>
+
+                </div>
+
+                <div class="progress-bar">
+
+                    <div
+                        id="progressFill"
+                    ></div>
+
+                </div>
+
+            </div>
+
+            <!-- QUESTION -->
+
+            <section class="question-card">
+
+                <p>
+                    What does this mean?
+                </p>
+
+                <h2 id="question">
+                    Question
+                </h2>
+
+            </section>
+
+            <!-- ANSWERS -->
+
+            <div
+                id="answers"
+                class="answers"
+            ></div>
+
+            <!-- FEEDBACK -->
+
+            <p
+                id="feedback"
+                class="feedback"
+            ></p>
+
+            <!-- NEXT -->
+
+            <button
+                id="nextButton"
+                class="primary wide hidden"
+            >
+                Next →
+            </button>
+
+        </section>
+
+
+        <!-- ========================= -->
+        <!-- RESULTS -->
+        <!-- ========================= -->
+
+        <section id="resultsView" class="view">
+
+            <button
+                class="back"
+                data-back="homeView"
+            >
+                ← Home
+            </button>
+
+            <div class="heading">
+
+                <h2>📊 Results</h2>
+
+                <p id="resultSubtitle"></p>
+
+            </div>
+
+            <div
+                id="resultStats"
+                class="result-grid"
+            ></div>
+
+            <section class="panel">
+
+                <h3>
+                    Words to practise
+                </h3>
+
+                <div
+                    id="missedWords"
+                ></div>
+
+            </section>
+
+            <button
+                id="againButton"
+                class="primary wide"
+            >
+                Try Again
+            </button>
+
+        </section>
+
+
+        <!-- ========================= -->
+        <!-- WORD ACCURACY -->
+        <!-- ========================= -->
+
+        <section id="statsView" class="view">
+
+            <button
+                class="back"
+                data-back="homeView"
+            >
+                ← Home
+            </button>
+
+            <div class="heading">
+
+                <h2>📊 Word Accuracy</h2>
+
+                <p>
+                    Your attempts and accuracy are saved on this device.
+                </p>
+
+            </div>
+
+            <input
+                id="wordSearch"
+                class="search"
+                type="search"
+                placeholder="🔎 Search French or English..."
+                autocomplete="off"
+            >
+
+            <div
+                id="wordStats"
+                class="word-list"
+            ></div>
+
+        </section>
+
+    </main>
+
+    <!-- APP SCRIPTS -->
+
+    <script src="tests.js"></script>
+    <script src="app.js"></script>
 
 </body>
 </html>
