@@ -99,6 +99,15 @@ function esc(value) {
 }
 
 
+function isRapidMode() {
+
+  return (
+    currentMode === "rapid-multiple" ||
+    currentMode === "rapid-typing"
+  );
+}
+
+
 // =====================================================
 // VIEW NAVIGATION
 // =====================================================
@@ -658,25 +667,7 @@ function openMode() {
 
 
 // =====================================================
-// MULTIPLE MEANINGS
-// =====================================================
-//
-// English meanings are separated by "/".
-//
-// Example:
-// "current/common"
-//
-// Either:
-// current
-//
-// or:
-// common
-//
-// is accepted.
-//
-// Multiple meanings can also be typed:
-// current, common
-//
+// ANSWER CHECKING
 // =====================================================
 
 function expectedMeanings(expected) {
@@ -712,11 +703,6 @@ function isCorrect(input, expected) {
   }
 
 
-  // One correct meaning is enough.
-  //
-  // If multiple meanings are entered,
-  // every entered meaning must be accepted.
-
   return typed.every(
     answer =>
       accepted.includes(answer)
@@ -725,7 +711,7 @@ function isCorrect(input, expected) {
 
 
 // =====================================================
-// MULTIPLE-CHOICE ANSWERS
+// MULTIPLE CHOICE
 // =====================================================
 
 function answerChoices(correct) {
@@ -793,15 +779,33 @@ function startQuiz(mode) {
 
     missed: [],
 
+    answered: false,
+
     started: Date.now()
 
   };
 
 
-  $("quizMode").textContent =
-    mode === "multiple"
-      ? "Multiple Choice"
-      : "Enter English";
+  if (mode === "multiple") {
+
+    $("quizMode").textContent =
+      "Multiple Choice";
+
+  } else if (mode === "typing") {
+
+    $("quizMode").textContent =
+      "Enter English";
+
+  } else if (mode === "rapid-multiple") {
+
+    $("quizMode").textContent =
+      "⚡ Rapid Fire — Multiple Choice";
+
+  } else {
+
+    $("quizMode").textContent =
+      "⚡ Rapid Fire — Enter English";
+  }
 
 
   view("quizView");
@@ -820,6 +824,9 @@ function renderQuestion() {
     fr,
     en
   ] = quiz.items[quiz.index];
+
+
+  quiz.answered = false;
 
 
   $("quizProgress").textContent =
@@ -857,11 +864,14 @@ function renderQuestion() {
     nextQuestion;
 
 
-  // -----------------------------------------------
+  // ===================================================
   // MULTIPLE CHOICE
-  // -----------------------------------------------
+  // ===================================================
 
-  if (currentMode === "multiple") {
+  if (
+    currentMode === "multiple" ||
+    currentMode === "rapid-multiple"
+  ) {
 
     $("answers").innerHTML =
       answerChoices(en)
@@ -899,9 +909,9 @@ function renderQuestion() {
   }
 
 
-  // -----------------------------------------------
-  // ENTER ENGLISH
-  // -----------------------------------------------
+  // ===================================================
+  // TYPING
+  // ===================================================
 
   $("answers").innerHTML = `
 
@@ -945,9 +955,41 @@ function renderQuestion() {
   $("typingInput").onkeydown =
     event => {
 
-      if (event.key === "Enter") {
+      if (event.key !== "Enter") {
+        return;
+      }
+
+
+      event.preventDefault();
+
+
+      // In rapid-fire typing, Enter submits
+      // and immediately moves on.
+
+      if (
+        currentMode ===
+        "rapid-typing"
+      ) {
+
+        if (!quiz.answered) {
+
+          $("checkTyping").click();
+        }
+
+        return;
+      }
+
+
+      // In normal typing mode, Enter checks
+      // the answer first.
+
+      if (!quiz.answered) {
 
         $("checkTyping").click();
+
+      } else {
+
+        nextQuestion();
       }
     };
 }
@@ -964,16 +1006,12 @@ function checkAnswer(
   clickedButton = null
 ) {
 
-  // Prevent answering the same question twice.
-
-  if (
-    !$("nextButton")
-      .classList
-      .contains("hidden")
-  ) {
-
+  if (quiz.answered) {
     return;
   }
+
+
+  quiz.answered = true;
 
 
   const correct =
@@ -983,9 +1021,9 @@ function checkAnswer(
     );
 
 
-  // -----------------------------------------------
-  // SESSION STATS
-  // -----------------------------------------------
+  // ===================================================
+  // RECORD STATS
+  // ===================================================
 
   session.answered++;
 
@@ -1004,9 +1042,9 @@ function checkAnswer(
   updateSession();
 
 
-  // -----------------------------------------------
+  // ===================================================
   // CORRECT
-  // -----------------------------------------------
+  // ===================================================
 
   if (correct) {
 
@@ -1034,20 +1072,12 @@ function checkAnswer(
 
     session.points += earned;
 
-
-    $("feedback").textContent =
-      `+${earned} points — Correct! 🔥`;
-
-
-    $("feedback").style.color =
-      "var(--good)";
-
   }
 
 
-  // -----------------------------------------------
+  // ===================================================
   // WRONG
-  // -----------------------------------------------
+  // ===================================================
 
   else {
 
@@ -1060,7 +1090,52 @@ function checkAnswer(
       fr,
       en: expected
     });
+  }
 
+
+  // ===================================================
+  // RAPID FIRE
+  // ===================================================
+  //
+  // No feedback.
+  // No Next button.
+  // Go straight to the next question.
+  //
+
+  if (isRapidMode()) {
+
+    $("quizPoints").textContent =
+      `${quiz.points} pts`;
+
+
+    nextQuestion();
+
+    return;
+  }
+
+
+  // ===================================================
+  // NORMAL MODE FEEDBACK
+  // ===================================================
+
+  if (correct) {
+
+    const earned =
+      10 +
+      Math.min(
+        quiz.streak - 1,
+        5
+      ) * 2;
+
+
+    $("feedback").textContent =
+      `+${earned} points — Correct! 🔥`;
+
+
+    $("feedback").style.color =
+      "var(--good)";
+
+  } else {
 
     $("feedback").textContent =
       `Not quite. Accepted answer: ${expected}`;
@@ -1071,9 +1146,9 @@ function checkAnswer(
   }
 
 
-  // -----------------------------------------------
+  // ===================================================
   // MULTIPLE CHOICE FEEDBACK
-  // -----------------------------------------------
+  // ===================================================
 
   if (clickedButton) {
 
@@ -1126,6 +1201,11 @@ function checkAnswer(
 // =====================================================
 
 function nextQuestion() {
+
+  if (!quiz) {
+    return;
+  }
+
 
   quiz.index++;
 
@@ -1215,12 +1295,33 @@ function finishQuiz() {
   );
 
 
+  let modeName;
+
+
+  switch (currentMode) {
+
+    case "multiple":
+      modeName = "Multiple Choice";
+      break;
+
+    case "typing":
+      modeName = "Enter English";
+      break;
+
+    case "rapid-multiple":
+      modeName =
+        "⚡ Rapid Fire — Multiple Choice";
+      break;
+
+    case "rapid-typing":
+      modeName =
+        "⚡ Rapid Fire — Enter English";
+      break;
+  }
+
+
   $("resultSubtitle").textContent =
-    `${currentTest.title} · ${
-      currentMode === "multiple"
-        ? "Multiple Choice"
-        : "Enter English"
-    }`;
+    `${currentTest.title} · ${modeName}`;
 
 
   $("resultStats").innerHTML = `
@@ -1459,6 +1560,8 @@ function setupNavigation() {
   $("exitQuiz").onclick =
     () => {
 
+      quiz = null;
+
       view("homeView");
     };
 }
@@ -1493,6 +1596,61 @@ function setupEvents() {
 
   $("mistakesButton").onclick =
     startMistakes;
+
+
+  // ===================================================
+  // PC ENTER KEY
+  // ===================================================
+  //
+  // If a normal question has already been answered,
+  // pressing Enter does the same thing as clicking Next.
+  //
+  // For typing questions, Enter is handled by the
+  // typing input itself.
+  //
+
+  document.addEventListener(
+    "keydown",
+    event => {
+
+      if (
+        event.key !== "Enter" ||
+        !quiz ||
+        isRapidMode()
+      ) {
+
+        return;
+      }
+
+
+      if (
+        $("nextButton")
+          .classList
+          .contains("hidden")
+      ) {
+
+        return;
+      }
+
+
+      // Avoid triggering twice from the
+      // typing input handler.
+
+      if (
+        document.activeElement &&
+        document.activeElement.id ===
+        "typingInput"
+      ) {
+
+        return;
+      }
+
+
+      event.preventDefault();
+
+      nextQuestion();
+    }
+  );
 }
 
 
@@ -1518,18 +1676,35 @@ function init() {
 
 init();
 
+
 // =====================================================
 // OFFLINE / PWA
 // =====================================================
 
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js")
-      .then(() => {
-        console.log("French Revision is ready for offline use.");
-      })
-      .catch(error => {
-        console.error("Service worker registration failed:", error);
-      });
-  });
+
+  window.addEventListener(
+    "load",
+    () => {
+
+      navigator.serviceWorker
+        .register("./sw.js")
+        .then(() => {
+
+          console.log(
+            "French Revision is ready for offline use."
+          );
+
+        })
+        .catch(error => {
+
+          console.error(
+            "Service worker registration failed:",
+            error
+          );
+
+        });
+
+    }
+  );
 }
