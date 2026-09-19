@@ -1,4 +1,4 @@
-const CACHE_NAME = "french-revision-v2";
+const CACHE_NAME = "french-revision-v3";
 
 const APP_FILES = [
     "./",
