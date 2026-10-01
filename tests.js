@@ -456,4 +456,125 @@ const TESTS = [
     }
   },
 
+  
+  // ===================================================
+  // TEST A — NEGATIVES + DISTRACTORS
+  // ===================================================
+
+  {
+    category: "Common Traps & False Friends",
+    id: "test-a",
+    title: "Test A - Negatives + Distractors",
+    description: "Negatives, distractors and commonly confused expressions.",
+    words: {
+      "par contre": "whereas",
+      "même si": "even if, even though",
+      "en fait": "in fact",
+      "ne... pas": "not",
+      "ne... jamais": "never",
+      "ne... rien": "nothing, not anything",
+      "ne... plus": "no more, no longer",
+      "ne... personne": "no-one, nobody",
+      "ne... que": "only",
+      "seulement": "only",
+      "ne... aucun(e)": "not any, not a single",
+      "ni... ni": "neither ... nor",
+      "malgré": "despite",
+      "pas encore": "not yet",
+      "pareil, pareille": "the same",
+      "au lieu de": "instead of",
+      "sauf": "except",
+      "venir de": "to have just ...",
+      "je viens de": "I have just ...",
+      "certains": "certain/some people",
+      "presque": "almost, nearly",
+      "déjà": "already",
+      "c'est-à-dire": "in other words",
+      "contraire": "opposite, contrary",
+      "un peu": "a bit, a little"
+    }
+  },
+
+  // ===================================================
+  // TEST B — FALSE FRIENDS
+  // ===================================================
+
+  {
+    category: "Common Traps & False Friends",
+    id: "test-b",
+    title: "Test B - False Friends",
+    description: "French words that can be confused with English words.",
+    words: {
+      "actuel": "current, present",
+      "l'anniversaire": "birthday",
+      "attendre": "to wait",
+      "blesser": "to injure",
+      "le bras": "arm",
+      "le but": "goal",
+      "car": "because",
+      "carte": "menu, map, card",
+      "célibataire": "single",
+      "la chambre": "bedroom",
+      "la chance": "luck",
+      "chanter": "to sing",
+      "chanteur, chanteuse": "singer",
+      "la circulation": "traffic",
+      "la cité": "council estate",
+      "le coin": "corner",
+      "le collège": "secondary school",
+      "commander": "to order",
+      "contrôler": "to check, to inspect",
+      "contrôle": "test, inspection",
+      "la course": "race",
+      "les courses": "(food) shopping",
+      "la cour": "courtyard, playground",
+      "les cours": "lessons",
+      "court(e)": "short",
+      "crier": "to shout",
+      "direction": "management",
+      "demander, demande": "to ask for, request"
+    }
+  },
+
+  // ===================================================
+  // TEST C — FALSE FRIENDS
+  // ===================================================
+
+  {
+    category: "Common Traps & False Friends",
+    id: "test-c",
+    title: "Test C - False Friends",
+    description: "More commonly confused French and English vocabulary.",
+    words: {
+      "le dos": "back",
+      "enregistrer": "to record, to save",
+      "la formation": "training",
+      "fort(e)": "strong, loud",
+      "les fruits de mer": "seafood",
+      "gentil, gentille": "kind",
+      "grand, grand(e)": "big, tall",
+      "grave": "serious",
+      "l'hôtel de ville": "town hall",
+      "joli(e)": "pretty",
+      "le journal": "newspaper",
+      "les journaux": "newspapers",
+      "la journée": "day",
+      "la lecture": "reading",
+      "le magasin": "shop",
+      "la main": "hand",
+      "la manifestation": "demonstration, event",
+      "manifester": "to protest, to demonstrate",
+      "le médecin": "doctor",
+      "la note": "grade, mark",
+      "l'occasion": "chance, opportunity",
+      "le pain": "bread",
+      "le pantalon": "trousers",
+      "la partie": "part, game, match",
+      "passer un examen": "to sit/take an exam",
+      "plein": "full",
+      "le programme": "schedule",
+      "le projet": "plan"
+    }
+  },
+
 ];
