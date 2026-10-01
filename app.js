@@ -73,14 +73,12 @@ function shuffle(array) {
 
 
 function norm(value) {
-
   return String(value)
     .toLowerCase()
-    .trim()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[.!?;:]/g, "")
-    .replace(/\s+/g, " ");
+    // Ignore punctuation, apostrophes, accents, hyphens and spaces.
+    .replace(/[^a-z0-9]/g, "");
 }
 
 
@@ -107,6 +105,14 @@ function isRapidMode() {
   );
 }
 
+
+function normalizeAnswer(text) {
+    return text
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]/g, "");
+}
 
 // =====================================================
 // VIEW NAVIGATION
@@ -689,24 +695,28 @@ function typedMeanings(input) {
 
 
 function isCorrect(input, expected) {
+  const accepted = expectedMeanings(expected);
+  const wholeInput = norm(input);
+  const wholeExpected = norm(expected);
 
-  const accepted =
-    expectedMeanings(expected);
+  if (!wholeInput) {
+    return false;
+  }
 
+  // Accept the complete displayed translation regardless of punctuation.
+  // This also lets entries such as "to record, to save" match when typed
+  // without the comma.
+  if (wholeInput === wholeExpected || accepted.includes(wholeInput)) {
+    return true;
+  }
 
-  const typed =
-    typedMeanings(input);
-
-
+  // Also allow one or more accepted meanings to be entered separately.
+  const typed = typedMeanings(input);
   if (!typed.length) {
     return false;
   }
 
-
-  return typed.every(
-    answer =>
-      accepted.includes(answer)
-  );
+  return typed.every(answer => accepted.includes(answer));
 }
 
 
