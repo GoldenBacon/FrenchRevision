@@ -643,8 +643,8 @@ function renderTests() {
         currentTest =
           TESTS.find(
             test =>
-              test.id ===
-              button.dataset.testId
+              test.id === button.dataset.testId &&
+              test.category === currentCategory
           );
 
 
