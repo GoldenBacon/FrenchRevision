@@ -145,7 +145,7 @@ const TESTS = [
       "goût": "taste",
       "idée": "idea",
       "inconvénient": "disadvantage",
-      "manque" "lack",
+      "manque": "lack",
       "meilleur(e)": "best",
       "mieux": "better",
       "par contre": "on the other hand",
