@@ -73,12 +73,14 @@ function shuffle(array) {
 
 
 function norm(value) {
+
   return String(value)
     .toLowerCase()
+    .trim()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
-    // Ignore punctuation, apostrophes, accents, hyphens and spaces.
-    .replace(/[^a-z0-9]/g, "");
+    .replace(/[.!?;:]/g, "")
+    .replace(/\s+/g, " ");
 }
 
 
@@ -107,11 +109,11 @@ function isRapidMode() {
 
 
 function normalizeAnswer(text) {
-    return text
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/[^a-z0-9]/g, "");
+  return String(text)
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]/g, "");
 }
 
 // =====================================================
@@ -677,46 +679,40 @@ function openMode() {
 // =====================================================
 
 function expectedMeanings(expected) {
-
   return String(expected)
     .split("/")
-    .map(norm)
+    .map(normalizeAnswer)
     .filter(Boolean);
 }
 
 
 function typedMeanings(input) {
-
   return String(input)
     .split(/[,/;]+/)
-    .map(norm)
+    .map(normalizeAnswer)
     .filter(Boolean);
 }
 
 
 function isCorrect(input, expected) {
-  const accepted = expectedMeanings(expected);
-  const wholeInput = norm(input);
-  const wholeExpected = norm(expected);
 
-  if (!wholeInput) {
-    return false;
-  }
+  const accepted =
+    expectedMeanings(expected);
 
-  // Accept the complete displayed translation regardless of punctuation.
-  // This also lets entries such as "to record, to save" match when typed
-  // without the comma.
-  if (wholeInput === wholeExpected || accepted.includes(wholeInput)) {
-    return true;
-  }
 
-  // Also allow one or more accepted meanings to be entered separately.
-  const typed = typedMeanings(input);
+  const typed =
+    typedMeanings(input);
+
+
   if (!typed.length) {
     return false;
   }
 
-  return typed.every(answer => accepted.includes(answer));
+
+  return typed.every(
+    answer =>
+      accepted.includes(answer)
+  );
 }
 
 
