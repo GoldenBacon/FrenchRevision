@@ -330,4 +330,39 @@ const TESTS = [
     }
   },
 
+  
+  {
+    category: "Common Traps & False Friends",
+    id: "common-traps-d",
+    title: "Test D - False Friends",
+    description: "More commonly confused French and English vocabulary.",
+    words: {
+      "prévenir": "to let know/to warn",
+      "la pièce": "room",
+      "principal": "main",
+      "le/la professeur": "teacher",
+      "propre": "clean/own",
+      "quitter": "to leave",
+      "rester": "to stay",
+      "le roman": "novel",
+      "sale": "dirty",
+      "le sang": "blood",
+      "sensible": "sensitive",
+      "sortir": "to go out",
+      "le spectacle": "show",
+      "le stage": "work experience",
+      "supporter": "to bear/to stand",
+      "sympathique (sympa)": "nice/kind/friendly",
+      "le tableau": "board/painting/picture",
+      "le thé": "tea",
+      "travailler": "to work",
+      "travailleur, travailleuse": "hard working",
+      "le travail": "work/job",
+      "le type": "guy",
+      "le vent": "wind",
+      "la vague": "wave",
+      "vide": "empty"
+    }
+  },
+
 ];
