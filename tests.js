@@ -14,6 +14,255 @@ const TESTS = [
 
   
   // ===================================================
+  // Essential Verbs: TEST A — ESSENTIAL VERBS
+  // ===================================================
+
+  {
+    category: "Essential Verbs",
+    id: "essential-verbs-a",
+    title: "Test A - Essential Verbs",
+    description: "Essential French verbs A.",
+    words: {
+      "acheter": "to buy",
+      "accueillir": "to welcome",
+      "aider": "to help",
+      "ajouter": "to add",
+      "aller": "to go",
+      "allumer": "to switch on",
+      "améliorer": "to improve",
+      "annuler": "to cancel",
+      "appartenir": "to belong",
+      "appeler": "to call",
+      "apporter": "to bring",
+      "apprendre": "to learn",
+      "arrêter": "to stop/to arrest",
+      "arriver": "to arrive/to manage to",
+      "attendre": "to wait",
+      "augmenter": "to increase",
+      "avoir (eu)": "to have (had)",
+      "blesser": "to injure",
+      "boire (bu)": "to drink (drank)",
+      "cacher": "to hide",
+      "casser": "to break",
+      "chanter": "to sing",
+      "chercher": "to look for",
+      "choisir": "to choose",
+      "commander": "to order",
+      "commencer": "to start",
+      "comprendre": "to understand",
+      "compter": "to count",
+      "conduire": "to drive"
+    }
+  },
+
+  // ===================================================
+  // Essential Verbs: TEST B — ESSENTIAL VERBS
+  // ===================================================
+
+  {
+    category: "Essential Verbs",
+    id: "essential-verbs-b",
+    title: "Test B - Essential Verbs",
+    description: "Essential French verbs B.",
+    words: {
+      "connaître": "to know",
+      "conseiller": "to advise",
+      "construire": "to build",
+      "couper": "to cut",
+      "courir (couru)": "to run (ran)",
+      "coûter": "to cost",
+      "créer": "to create",
+      "crier": "to shout",
+      "croire (cru)": "to believe (believed)",
+      "décevoir (déçu)": "to disappoint (disappointed)",
+      "découvrir": "to discover",
+      "décrire": "to describe",
+      "demander": "to ask",
+      "descendre": "to go down/to get off",
+      "dessiner": "to draw",
+      "détruire": "to destroy",
+      "devenir": "to become",
+      "devoir (dû)": "to have to (had to)",
+      "diminuer": "to lower/to decrease",
+      "dire": "to say",
+      "diriger": "to direct/to guide",
+      "discuter": "to discuss",
+      "disparaître": "to disappear",
+      "donner": "to give",
+      "dormir": "to sleep",
+      "écrire": "to write",
+      "empêcher": "to prevent",
+      "enseigner": "to teach",
+      "entendre, s'entendre": "to hear/to get on"
+    }
+  },
+
+  // ===================================================
+  // Essential Verbs: TEST C — ESSENTIAL VERBS
+  // ===================================================
+
+  {
+    category: "Essential Verbs",
+    id: "essential-verbs-c",
+    title: "Test C - Essential Verbs",
+    description: "Essential French verbs C.",
+    words: {
+      "emporter": "to take away",
+      "emprunter": "to borrow",
+      "envoyer": "to send",
+      "espérer": "to hope",
+      "essayer": "to try",
+      "étonner": "to shock/to surprise",
+      "être": "to be",
+      "étudier": "to study",
+      "éviter": "to avoid",
+      "expliquer": "to explain",
+      "fabriquer": "to manufacture/to produce",
+      "faire": "to do/to make",
+      "féliciter": "to congratulate",
+      "fermer": "to close",
+      "finir": "to finish",
+      "fumer": "to smoke",
+      "gagner": "to win/to earn",
+      "garder": "to keep/to look after",
+      "gérer": "to manage/handle/deal with",
+      "goûter": "to taste",
+      "habiter": "to live",
+      "harceler": "to bully/to harass",
+      "interdire": "to ban/to forbid",
+      "laisser": "to leave/to let",
+      "lancer": "to throw/to launch",
+      "lire (lu)": "to read (read - past)",
+      "lutter": "to fight/to struggle",
+      "marcher": "to walk/to work",
+      "menacer": "to threaten"
+    }
+  },
+
+  // ===================================================
+  // Essential Verbs: TEST D — ESSENTIAL VERBS
+  // ===================================================
+
+  {
+    category: "Essential Verbs",
+    id: "essential-verbs-d",
+    title: "Test D - Essential Verbs",
+    description: "Essential French verbs D.",
+    words: {
+      "mentir": "to lie",
+      "mener": "to lead",
+      "mettre (mis)": "to put (put - past)",
+      "monter": "to go up/to climb",
+      "montrer": "to show",
+      "mourir (mort)": "to die (died/dead)",
+      "naître (né)": "to be born (born)",
+      "nager": "to swim",
+      "nettoyer": "to clean",
+      "offrir": "to offer",
+      "oublier": "to forget",
+      "ouvrir": "to open",
+      "parler": "to speak",
+      "partager": "to share",
+      "partir": "to leave",
+      "passer": "to spend (time)",
+      "penser": "to think",
+      "perdre": "to lose",
+      "permettre (permis)": "to allow/to let (allowed)",
+      "porter": "to wear",
+      "pouvoir (pu)": "to be able (was able)",
+      "prendre": "to take",
+      "protéger": "to protect",
+      "quitter": "to leave",
+      "raconter": "to tell/to narrate",
+      "ranger": "to tidy",
+      "rappeler": "to call/to remember",
+      "réagir": "to react"
+    }
+  },
+
+  // ===================================================
+  // Essential Verbs: TEST E — ESSENTIAL VERBS
+  // ===================================================
+
+  {
+    category: "Essential Verbs",
+    id: "essential-verbs-e",
+    title: "Test E - Essential Verbs",
+    description: "Essential French verbs E.",
+    words: {
+      "recevoir (reçu)": "to receive (received)",
+      "reconnaître": "to recognise",
+      "remplir": "to fill up",
+      "rencontrer": "to meet",
+      "rentrer": "to go back/to go home",
+      "répondre": "to answer",
+      "rester": "to stay",
+      "retourner": "to return",
+      "réussir": "to succeed/to pass (an exam)",
+      "revenir": "to come back",
+      "rêver": "to dream",
+      "rire (ri)": "to laugh (laughed)",
+      "sauver": "to save",
+      "savoir": "to know",
+      "se coucher": "to go to bed",
+      "sauver": "to save",
+      "savoir (su)": "to know (knew)",
+      "se coucher": "to go to bed",
+      "se disputer": "to argue",
+      "s'entendre": "to get along",
+      "s'inquiéter": "to be worried/to bother",
+      "s'intéresser": "to find interesting",
+      "se laver": "to get washed",
+      "se lever": "to get up",
+      "se marier": "to get married",
+      "se reposer": "to relax",
+      "se souvenir": "to remember",
+      "se tromper": "to make a mistake/to cheat"
+    }
+  },
+
+  // ===================================================
+  // Essential Verbs: TEST F — ESSENTIAL VERBS
+  // ===================================================
+
+  {
+    category: "Essential Verbs",
+    id: "essential-verbs-f",
+    title: "Test F - Essential Verbs",
+    description: "Essential French verbs F.",
+    words: {
+      "ressembler": "to look like/to look alike",
+      "sembler": "to seem",
+      "sentir": "to feel",
+      "signifier": "to mean",
+      "situer": "to be located/to take place",
+      "sortir": "to go out",
+      "souhaiter": "to wish",
+      "sourire (souri)": "to smile (smiled)",
+      "souligner": "to underline",
+      "soutenir": "to support",
+      "suivre (suivi)": "to follow (followed)",
+      "tenir": "to hold",
+      "terminer": "to finish",
+      "tomber": "to fall",
+      "toucher": "to touch",
+      "traduire": "to translate",
+      "travailler": "to work",
+      "traverser": "to cross",
+      "trouver": "to find",
+      "tuer": "to kill",
+      "utiliser": "to use",
+      "vendre": "to sell",
+      "venir": "to come",
+      "vivre (vécu)": "to live (lived)",
+      "voir (vu)": "to see (saw)",
+      "voler": "to fly/to steal",
+      "vouloir (voulu)": "to want (wanted)",
+      "voyager": "to travel"
+    }
+  },
+  
+  // ===================================================
   // Key Words + Little Words: TEST A — GREETINGS + CONJUNCTIONS
   // ===================================================
 
