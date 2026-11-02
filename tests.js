@@ -13,7 +13,7 @@
 const TESTS = [
 
   // ===================================================
-  // TEST A — OPINION ADJECTIVES
+  // Opinions & Feelings: TEST A — OPINION ADJECTIVES
   // ===================================================
 
   {
@@ -63,7 +63,7 @@ const TESTS = [
 
 
   // ===================================================
-  // TEST B — FEELINGS
+  // Opinions & Feelings: TEST B — FEELINGS
   // ===================================================
 
   {
@@ -113,7 +113,7 @@ const TESTS = [
 
 
   // ===================================================
-  // TEST C — OPINIONS
+  // Opinions & Feelings: TEST C — OPINIONS
   // ===================================================
 
   {
@@ -163,7 +163,7 @@ const TESTS = [
   },
 
     // ===================================================
-  // TEST D — OPINION VERBS
+  // Opinions & Feelings: TEST D — OPINION VERBS
   // ===================================================
 
   {
@@ -211,7 +211,7 @@ const TESTS = [
 
   
   // ===================================================
-  // TEST A — NEGATIVES + DISTRACTORS
+  // Common Traps: TEST A — NEGATIVES + DISTRACTORS
   // ===================================================
 
   {
@@ -249,7 +249,7 @@ const TESTS = [
   },
 
   // ===================================================
-  // TEST B — FALSE FRIENDS
+  // Common Traps: TEST B — FALSE FRIENDS
   // ===================================================
 
   {
@@ -290,7 +290,7 @@ const TESTS = [
   },
 
   // ===================================================
-  // TEST C — FALSE FRIENDS
+  // Common Traps: TEST C — FALSE FRIENDS
   // ===================================================
 
   {
@@ -331,7 +331,7 @@ const TESTS = [
   },
 
   // ===================================================
-  // TEST D — False Friends
+  // Common Traps: TEST D — False Friends
   // ===================================================
   
   {
@@ -365,6 +365,33 @@ const TESTS = [
       "le vent": "wind",
       "la vague": "wave",
       "vide": "empty"
+    }
+  },
+
+  // ===================================================
+  // Common Traps: TEST E — Partial False Friends
+  // ===================================================
+  
+  {
+    category: "Common Traps & False Friends",
+    id: "common-traps-e",
+    title: "Test E - Partial False Friends",
+    description: "More commonly confused French and English vocabulary.",
+    words: {
+      "l'addition": "addition/sum/bill",
+      "arriver": "to arrive/to happen/to manage to",
+      "le chef": "chef/boss",
+      "la circulation": "director/headteacher",
+      "l'histoire": "history/story",
+      "manifester": "manifest/protest",
+      "l'occcasion": "occasion/chance",
+      "personne": "person/nobody",
+      "le project": "project/plan",
+      "le rapport": "report/relationship",
+      "la scène": "scence/stage",
+      "le souvenir": "souvenir/memory",
+      "la situation": "situation/location",
+      "le tour/la tour": "tour/tower",
     }
   },
 
