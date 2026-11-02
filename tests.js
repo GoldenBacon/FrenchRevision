@@ -12,6 +12,203 @@
 
 const TESTS = [
 
+  
+  // ===================================================
+  // Key Words + Little Words: TEST A — GREETINGS + CONJUNCTIONS
+  // ===================================================
+
+  {
+    category: "Key Words + Little Words",
+    id: "key-words-a",
+    title: "Test A - Greetings + Conjunctions",
+    description: "Greetings, conjunctions and useful little words.",
+    words: {
+      "bonjour, bonsoir": "hello",
+      "bienvenue": "welcome",
+      "au revoir": "goodbye",
+      "ça va?": "how are you?",
+      "ça va bien": "I'm well",
+      "ça va mal": "I'm not well",
+      "désolé(e)": "sorry",
+      "merci": "thank you",
+      "s'il vous plaît": "please",
+      "oui": "yes",
+      "non": "no",
+      "ne ... pas": "not",
+      "et, aussi": "and/also",
+      "mais": "but",
+      "car, parce que, puisque": "because",
+      "alors": "so/well/then",
+      "donc": "so/therefore",
+      "si": "if/so/whether",
+      "ou": "or",
+      "qui": "who",
+      "que": "that",
+      "un peu": "a bit",
+      "assez (de)": "quite/enough (of)",
+      "beaucoup (de)": "a lot (of)",
+      "plus (de)": "more",
+      "moins (de)": "less",
+      "trop (de)": "too much/many",
+      "très": "very",
+      "plupart (de)": "most/the majority (of)",
+      "pour": "for/in order to",
+      "avec": "with"
+    }
+  },
+
+  // ===================================================
+  // Key Words + Little Words: TEST B — PRONOUNS + ARTICLES
+  // ===================================================
+
+  {
+    category: "Key Words + Little Words",
+    id: "key-words-b",
+    title: "Test B - Pronouns + Articles",
+    description: "Personal pronouns, possessives and articles.",
+    words: {
+      "je, j'": "I",
+      "tu": "you (singular/informal)",
+      "il": "he",
+      "elle": "she",
+      "on": "we/you",
+      "nous": "we",
+      "vous": "you (plural/formal)",
+      "ils, elles": "they",
+      "moi, moi-même": "me/myself",
+      "toi, toi-même": "you/yourself",
+      "lui, lui-même": "him/himself",
+      "elle, elle-même": "her/herself",
+      "eux, elles": "them",
+      "un, une": "a/an/one",
+      "mon, ma, mes": "my",
+      "ton, ta, tes": "your",
+      "son, sa, ses": "his/her",
+      "votre, vos": "your (plural/formal)",
+      "leur, leurs": "their",
+      "ça": "it/that",
+      "ce, cette, cet, ces": "this/that/these",
+      "chacun": "each person",
+      "un, une": "a/an/one",
+      "le, la, les, l'": "the",
+      "à": "at/to/in",
+      "au, à la, à l', aux": "at the/to the/in the",
+      "de": "of/from",
+      "du, de la, de l', des": "some/of the/from the",
+      "y": "there/it",
+      "là, là-bas": "there/over there",
+      "en": "in/by"
+    }
+  },
+
+  // ===================================================
+  // Key Words + Little Words: TEST C — KEY VERBS
+  // ===================================================
+
+  {
+    category: "Key Words + Little Words",
+    id: "key-words-c",
+    title: "Test C - Key Verbs",
+    description: "Common French verb forms.",
+    words: {
+      "je suis": "I am",
+      "tu es": "you are",
+      "il est": "he is",
+      "elle est": "she is",
+      "on est": "we are/you are",
+      "nous sommes": "we are",
+      "vous êtes": "you are",
+      "ils, elles sont": "they are",
+      "c'est": "it's/it is",
+      "ce n'est pas": "it's not/it isn't",
+      "j'ai": "I have",
+      "tu as": "you have",
+      "il a": "he has",
+      "elle a": "she has",
+      "on a": "we/you have",
+      "nous avons": "we have",
+      "vous avez": "you have",
+      "ils, elles ont": "they have",
+      "il y a": "there is/there are",
+      "il n'y a pas de": "there isn't/there aren't",
+      "je n'ai pas de": "I don't have",
+      "je vais": "I am going/I go",
+      "on va": "we are going/we go",
+      "nous allons": "we are going/we go"
+    }
+  },
+
+  
+  // ===================================================
+  // Key Words + Little Words: TEST D — MODAL VERBS
+  // ===================================================
+
+  {
+    category: "Key Words + Little Words",
+    id: "key-words-d",
+    title: "Test D - Modal Verbs",
+    description: "Useful modal verbs and expressions.",
+    words: {
+      "je voudrais": "I would like",
+      "je veux": "I want",
+      "je ne veux pas": "I don't want",
+      "tu veux": "you want",
+      "vous voulez": "you want",
+      "je peux": "I can",
+      "je ne peux pas": "I can't",
+      "tu peux": "you can",
+      "on peut": "we/you can",
+      "vous pouvez": "you can",
+      "j'aime": "I like",
+      "je n'aime pas": "I don't like",
+      "tu aimes": "you like",
+      "vous aimez": "you like",
+      "je dois": "I must/have to",
+      "tu dois": "you must/have to",
+      "on doit": "you/we must/have to",
+      "vous devez": "you must/have to",
+      "il faut": "you must",
+      "il ne faut pas": "you must not"
+    }
+  },
+
+  // ===================================================
+  // Key Words + Little Words: TEST E — QUESTION WORDS
+  // ===================================================
+
+  {
+    category: "Key Words + Little Words",
+    id: "key-words-e",
+    title: "Test E - Question Words",
+    description: "Question words and useful question expressions.",
+    words: {
+      "est-ce que?": "turns it into a question",
+      "qu'est-ce que?": "what?",
+      "que?": "what?",
+      "quoi?": "what?",
+      "quel/quelle?": "which/what?",
+      "qui?": "who?",
+      "avec qui?": "who with?",
+      "quand?": "when?",
+      "où?": "where?",
+      "où est ...?": "where is ...?",
+      "où sont ...?": "where are ...?",
+      "pourquoi?": "why?",
+      "comment?": "how?",
+      "combien?": "how much/many?",
+      "c'est combien?": "how much is it?",
+      "combien de temps?": "how long?",
+      "à quelle heure?": "at what time?",
+      "est-ce que je peux...?": "can I...?",
+      "est-ce qu'on peut...?": "can we...?",
+      "et toi? / et vous?": "what about you?",
+      "aimes-tu...?": "do you like...?",
+      "avez-vous...?": "do you have...?",
+      "est-ce qu'il y a...?": "is there?"
+    }
+  },
+
+  
   // ===================================================
   // Opinions & Feelings: TEST A — OPINION ADJECTIVES
   // ===================================================
