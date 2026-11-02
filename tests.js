@@ -987,4 +987,807 @@ const TESTS = [
     }
   },
 
+   // ===================================================
+  // Theme 1 - 1 Identity + Relationships: TEST 1
+  // ===================================================
+   
+   {
+    category: "Theme 1",
+    id: "identity-1",
+    title: "Identity + Relationships — Test 1",
+    description: "GCSE KO Higher vocabulary: people and family.",
+    words: {
+      "les gens": "people",
+      "les animaux": "animals/pets",
+      "l'ado": "teenager/adolescent",
+      "l'ami(e)": "friend",
+      "le beau-père": "step-dad/father-in-law",
+      "la belle-mère": "step-mum/mother-in-law",
+      "le chien": "dog",
+      "le copain": "friend/boyfriend",
+      "la copine": "friend/girlfriend",
+      "le citoyen": "citizen",
+      "la dame": "lady",
+      "le demi-frère": "half brother",
+      "la demi-sœur": "half sister",
+      "l'enfant": "child",
+      "l'enfance": "childhood",
+      "proche": "close",
+      "la femme": "woman/wife",
+      "la fille": "girl/daughter",
+      "le fils": "son",
+      "le garçon": "boy",
+      "l'homme": "man",
+      "maman": "mum/mummy",
+      "le mari": "husband",
+      "le meilleur ami(e)": "best friend",
+      "l'oncle": "uncle",
+      "la tante": "aunt",
+      "le/la voisin(e)": "neighbour",
+      "lui, elle, eux": "him, her, them"
+    }
+  },
+   
+   // ===================================================
+  // Theme 1 - Identity + Relationships: TEST 2
+  // ===================================================
+   
+  {
+    category: "Theme 1",
+    id: "identity-2",
+    title: "Identity + Relationships — Test 2",
+    description: "GCSE KO Higher vocabulary: personality and appearance.",
+    words: {
+      "agréable": "nice/pleasant",
+      "bavard(e)": "chatty",
+      "fier, fière": "proud",
+      "fou, folle": "crazy, mad",
+      "gentil(le)": "kind",
+      "heureux/euse": "happy",
+      "méchant(e)": "nasty",
+      "paresseux/euse": "lazy",
+      "sensible": "sensitive",
+      "sérieux": "conscientious/responsible",
+      "sympa": "nice",
+      "timide": "shy",
+      "travailleur/euse": "hard working",
+      "triste": "sad",
+      "vif, vive": "lively",
+      "à la mode": "trendy/fashionable",
+      "cheveux": "hair",
+      "le chapeau": "hat",
+      "grandir": "to grow, to get bigger",
+      "jeune, jeunesse": "young/youth",
+      "joli(e)": "pretty",
+      "la mode": "fashion",
+      "le pantalon": "trousers",
+      "porter": "to wear",
+      "la taille": "height, size",
+      "vieux, vieille": "old",
+      "le visage": "face",
+      "les vêtements": "clothes"
+    }
+  },
+   
+   // ===================================================
+  // Theme 1 - Identity + Relationships: TEST 3
+  // ===================================================
+   
+  {
+    category: "Theme 1",
+    id: "identity-3",
+    title: "Identity + Relationships — Test 3",
+    description: "GCSE KO Higher vocabulary: relationships and life events.",
+    words: {
+      "aidant(e)": "carer",
+      "l'aide": "help",
+      "l'amour": "love",
+      "l'anniversaire": "birthday",
+      "célibataire": "single",
+      "la colère": "anger/angry",
+      "la confiance": "trust",
+      "connaître": "to know",
+      "le conseil, conseiller": "advice/to advise",
+      "ensemble": "together",
+      "la dispute": "argument",
+      "le mariage": "wedding/marriage",
+      "mariage du même sexe": "same sex marriage",
+      "mort(e)": "dead",
+      "mourir": "to die",
+      "la naissance": "birth",
+      "né(e)": "born",
+      "PACS": "civil partnership",
+      "partager": "to share",
+      "la promesse": "promise",
+      "promettre": "to promise",
+      "le rapport": "relationship",
+      "se disputer": "to argue",
+      "s'entendre": "to get on",
+      "se marier": "to get married",
+      "soutien": "support",
+      "la vie": "life",
+      "vivre": "to live"
+    }
+  },
+   
+   // ===================================================
+  // Theme 1 - Healthy Living + Lifestyle: Test 1
+  // ===================================================
+   
+  {
+    category: "Theme 1",
+    id: "healthy-1",
+    title: "Healthy Living + Lifestyle — Test 1",
+    description: "GCSE KO Higher vocabulary: food and drink.",
+    words: {
+      "l'alcool": "alcohol",
+      "le plat": "dish",
+      "le couteau": "knife",
+      "le petit déjeuner": "breakfast",
+      "le déjeuner": "lunch",
+      "la cuisine": "food/kitchen/cooking",
+      "la nourriture": "food",
+      "les légumes": "vegetables",
+      "frais, fraîche": "fresh",
+      "le fromage": "cheese",
+      "les frites": "fries",
+      "les fruits de mer": "seafood",
+      "le gâteau": "cake",
+      "la glace": "ice cream",
+      "le lait": "milk",
+      "le pain": "bread",
+      "le poisson": "fish",
+      "le poulet": "chicken",
+      "la viande": "meat",
+      "la boisson": "drink",
+      "le café": "coffee",
+      "l'eau": "water",
+      "le thé": "tea",
+      "le vin": "wine",
+      "la faim": "hunger/hungry",
+      "la soif": "thirst/thirsty",
+      "goûter": "to taste",
+      "nourrir": "to feed"
+    }
+  },
+
+   // ===================================================
+  // Theme 1 - Healthy Living + Lifestyle: Test 2
+  // ===================================================
+   
+  {
+    category: "Theme 1",
+    id: "healthy-2",
+    title: "Healthy Living + Lifestyle — Test 2",
+    description: "GCSE KO Higher vocabulary: health and the body.",
+    words: {
+      "améliorer": "to improve",
+      "arrêter": "to stop",
+      "le bras": "arm",
+      "la bouche": "mouth",
+      "le cœur": "heart",
+      "le corps": "body",
+      "conseiller, un conseil": "to advise/advice",
+      "dormir": "to sleep",
+      "le dos": "back",
+      "la drogue": "drug",
+      "garder la forme": "to keep in shape",
+      "la jambe": "leg",
+      "malade": "ill",
+      "la maladie": "illness",
+      "marcher, à pied": "to walk/on foot",
+      "médicament": "medicine/drug",
+      "l'oreille": "ear",
+      "la peau": "skin",
+      "peser": "to weigh",
+      "fumer": "to smoke",
+      "le sang": "blood",
+      "la santé": "health",
+      "sain(e)": "healthy",
+      "sentir": "to feel",
+      "soin": "care",
+      "le tabac": "tobacco/smoking",
+      "la tête": "head",
+      "le visage": "face"
+    }
+  },
+
+   // ===================================================
+  // Theme 1 - Education + Work: Test 1
+  // ===================================================
+   
+  {
+    category: "Theme 1",
+    id: "education-1",
+    title: "Education + Work — Test 1",
+    description: "GCSE KO Higher vocabulary: school.",
+    words: {
+      "le collège": "secondary school",
+      "crier": "to shout",
+      "corriger": "to correct/to mark",
+      "le comportement": "behaviour",
+      "la connaissance": "knowledge",
+      "la cour": "courtyard/playground",
+      "le concours": "competition",
+      "directeur, directrice": "headteacher",
+      "l'école": "school",
+      "l'élève": "pupil",
+      "l'étudiant(e)": "student",
+      "l'enseignement": "education/teaching",
+      "en retard": "late",
+      "interdire, interdit": "to forbid/forbidden",
+      "permettre, permis": "to allow/allowed",
+      "l'uniforme scolaire": "school uniform",
+      "le pantalon": "trousers",
+      "les rapports": "relationships",
+      "la récréation": "break time",
+      "les règles, le règlement": "rules",
+      "la rentrée": "return to school",
+      "la leçon": "lesson",
+      "se disputer": "to argue",
+      "s'entendre": "to get on",
+      "se lever tard/tôt": "to get up late/early",
+      "quatrième": "Year 9",
+      "troisième": "Year 10",
+      "seconde": "Year 11",
+      "première": "Year 12"
+    }
+  },
+
+   // ===================================================
+  // Theme 1 - Education + Work: Test 2
+  // ===================================================
+   
+  {
+    category: "Theme 1",
+    id: "education-2",
+    title: "Education + Work — Test 2",
+    description: "GCSE KO Higher vocabulary: learning and school subjects.",
+    words: {
+      "aider": "to help",
+      "améliorer": "to improve",
+      "l'anglais": "English",
+      "apprendre": "to learn",
+      "les devoirs": "homework",
+      "l'éducation": "education",
+      "écrire": "to write",
+      "enseigner": "to teach",
+      "l'espagnol": "Spanish",
+      "essayer": "to try/attempt/test",
+      "étudier, les études": "to study/studies",
+      "l'erreur, la faute": "mistake/fault",
+      "l'informatique": "IT",
+      "les langues étrangères": "foreign languages",
+      "la matière": "subject",
+      "le niveau": "level",
+      "la note": "grade/mark",
+      "savoir": "to know",
+      "se tromper": "to be mistaken/to cheat",
+      "le travail scolaire": "school work",
+      "la vie scolaire": "school life"
+    }
+  },
+
+   // ===================================================
+  // Theme 1 - Education + Work: Test 3
+  // ===================================================
+   
+  {
+    category: "Theme 1",
+    id: "education-3",
+    title: "Education + Work — Test 3",
+    description: "GCSE KO Higher vocabulary: plans and qualifications.",
+    words: {
+      "à l'avenir": "in the future",
+      "l'année sabbatique": "gap year",
+      "l'apprentissage": "apprenticeship",
+      "avoir l'intention de": "to intend",
+      "le baccalauréat": "A-level",
+      "le bénévole": "volunteer",
+      "connaître": "to know",
+      "chercher du travail": "to look for work",
+      "choisir, un choix": "to choose/a choice",
+      "conseiller, un conseil": "to advise/advice",
+      "devenir": "to become",
+      "diriger": "to direct/to guide",
+      "le lycée": "college",
+      "mener": "to lead",
+      "obtenir": "to get/to obtain",
+      "passer un examen": "to sit/take an exam",
+      "quitter le collège": "to leave school",
+      "réaliser": "to achieve",
+      "réussir": "to succeed/to pass",
+      "les résultats": "results",
+      "rêver, le rêve": "to dream/dream",
+      "le stage": "work experience",
+      "terminer": "to finish",
+      "trouver un emploi": "to find a job",
+      "l'université": "university",
+      "vouloir": "to want",
+      "voyager": "to travel"
+    }
+  },
+   
+   // ===================================================
+  // Theme 1 - Education + Work: Test 4
+  // ===================================================
+   {
+    category: "Theme 1",
+    id: "education-4",
+    title: "Education + Work — Test 4",
+    description: "GCSE KO Higher vocabulary: plans and qualifications.",
+    words: {
+      "l-argent": "money",
+      "les affaires": "business",
+      "bien payé, mal payé": "well paid/badly paid",
+      "ale collègue": "collegue/co-worker",
+      "la compétence": "skill",
+      "le commerce": "business",
+      "la concurrence": "competition",
+      "le défi": "challenge",
+      "disponible": "available",
+      "la direction": "management",
+      "l'échec": "failure",
+      "l'échelle": "ladder/scale",
+      "l'égalité": "equality",
+      "l'enquête": "survey/enquiry",
+      "l'employé": "employee",
+      "l'entreprise": "company",
+      "l'entretien": "interview",
+      "l'équipe": "team",
+      "faible": "weak",
+      "les résultats": "results",
+      "la formation": "training",
+      "gagner": "to win/to earn",
+      "gérer": "to manage",
+      "le grève": "strike",
+      "l'impôt": "tax",
+      "la liberté": "freedom",
+      "un rendez-vous": "an appointment",
+      "le salaire": "salary/wage",
+      "le temps libre": "free time"
+    }
+  },
+
+   // ===================================================
+  // Theme 1 - Education + Work: Test 5
+  // ===================================================
+   
+  {
+    category: "Theme 1",
+    id: "education-5",
+    title: "Education + Work — Test 5",
+    description: "GCSE KO Higher vocabulary: jobs and the workplace.",
+    words: {
+      "l'argent": "money",
+      "les affaires": "business",
+      "bien payé, mal payé": "well paid/badly paid",
+      "le/la collègue": "colleague/co-worker",
+      "la compétence": "skill",
+      "le commerce": "business",
+      "le chômage": "unemployment",
+      "la concurrence": "competition",
+      "le défi": "challenge",
+      "disponible": "available",
+      "la direction": "management",
+      "l'échec": "failure",
+      "l'échelle": "ladder, scale",
+      "l'égalité": "equality",
+      "l'enquête": "survey/enquiry",
+      "l'employé(e)": "employee",
+      "le/la chef": "chef/boss",
+      "le facteur": "postman",
+      "la loi": "law",
+      "le médecin": "doctor",
+      "le patron, la patronne": "boss",
+      "policier, policière": "police officer",
+      "la politique": "politics",
+      "le/la professeur": "teacher",
+      "la responsabilité": "responsibility",
+      "serveur, serveuse": "waiter/waitress",
+      "le soldat": "soldier",
+      "la tâche": "task/chore",
+      "l'usine": "factory"
+    }
+  },
+
+   // ===================================================
+  // Theme 2 - Free Time Activities: Test 1
+  // ===================================================
+   
+  {
+    category: "Theme 2",
+    id: "free-time-1",
+    title: "Free Time Activities — Test 1",
+    description: "GCSE KO Higher vocabulary: activities and hobbies.",
+    words: {
+      "bouger": "to move",
+      "le but": "goal",
+      "le concours": "competition",
+      "la concurrence": "competition",
+      "courir": "to run",
+      "la course": "race",
+      "dessiner": "to draw",
+      "dormir": "to sleep",
+      "les devoirs": "homework",
+      "l'équipe": "team",
+      "étudier": "to study",
+      "gagner": "to win/to earn",
+      "la lecture": "reading",
+      "lire": "to read",
+      "un livre, un roman": "a book/a novel",
+      "les travaux ménagers": "housework",
+      "la natation": "swimming",
+      "nettoyer": "to clean",
+      "la partie": "game/match",
+      "prier": "to pray",
+      "le prix": "price",
+      "les produits": "products",
+      "la recette": "recipe",
+      "le repas": "meal",
+      "la taille": "height/size",
+      "le spectacle": "show",
+      "vendre": "to sell",
+      "les vêtements": "clothes"
+    }
+  },
+   
+   // ===================================================
+  // Theme 2 - Free Time Activities: Test 2
+  // ===================================================
+   
+  {
+    category: "Theme 2",
+    id: "free-time-2",
+    title: "Free Time Activities — Test 2",
+    description: "GCSE KO Higher vocabulary: shopping and leisure.",
+    words: {
+      "la caisse": "checkout/till",
+      "la carte": "menu/map/card",
+      "le centre commercial": "shopping centre",
+      "le chapeau": "hat",
+      "les courses": "(food) shopping",
+      "le consommateur": "consumer/customer",
+      "coûter": "to cost",
+      "le couteau": "knife",
+      "la cuisine": "food/kitchen/cooking",
+      "essayer": "to try",
+      "goûter": "to taste",
+      "gratuit(e)": "free",
+      "le magasin": "shop",
+      "le marché": "market",
+      "la mode": "fashion",
+      "l'ouverture": "opening",
+      "la piscine": "swimming pool",
+      "la promenade": "walk",
+      "la réduction": "discount",
+      "la vente": "sale"
+    }
+  },
+   
+   // ===================================================
+  // Theme 2 - Customs, Festivals + Celebrations: Test 1
+  // ===================================================
+   
+  {
+    category: "Theme 2",
+    id: "customs-1",
+    title: "Customs, Festivals + Celebrations — Test 1",
+    description: "GCSE KO Higher vocabulary: festivals and celebrations.",
+    words: {
+      "l'argent": "money",
+      "l'Aïd": "Eid",
+      "le bonheur, la joie": "happiness/joy",
+      "le cadeau": "present/gift",
+      "célébrer": "to celebrate",
+      "la chance": "luck",
+      "chrétien": "Christian",
+      "le défilé": "parade",
+      "le dieu": "god",
+      "l'église": "church",
+      "l'événement": "event",
+      "félicitations": "congratulations",
+      "la foi": "faith",
+      "le jour férié": "bank holiday",
+      "la fête": "party/celebration",
+      "la mosquée": "mosque",
+      "musulman(e)": "Muslim",
+      "Noël": "Christmas",
+      "Pâques": "Easter",
+      "la prière": "prayer",
+      "le jour de l'An": "New Year's Day",
+      "la réunion": "meeting",
+      "la Saint-Valentin": "Valentine's Day",
+      "les vacances": "holiday"
+    }
+  },
+   
+   // ===================================================
+  // Theme 2 - Celebrity Culture: Test 1
+  // ===================================================
+   
+  {
+    category: "Theme 2",
+    id: "celebrity-1",
+    title: "Celebrity Culture — Test 1",
+    description: "GCSE KO Higher vocabulary: fame and entertainment.",
+    words: {
+      "acteur": "actor",
+      "auteur": "author",
+      "célèbre": "famous",
+      "la chance": "luck",
+      "chanteur, chanteuse": "singer",
+      "la chanson": "song",
+      "diriger": "to direct/to guide",
+      "l'écrivain": "writer",
+      "l'émission": "TV programme",
+      "l'entretien": "interview",
+      "l'étoile": "star",
+      "fier, fière": "proud",
+      "le journal, les journaux": "newspaper(s)",
+      "la marque": "brand",
+      "la mode": "fashion",
+      "le monde": "world",
+      "l'occasion": "chance/opportunity",
+      "les paroles": "lyrics",
+      "puissant(e)": "powerful",
+      "le personnage": "character",
+      "le prix": "prize/price",
+      "reconnaître": "to recognise",
+      "rencontrer": "to meet",
+      "la richesse": "wealth",
+      "le spectacle": "show",
+      "le succès": "success",
+      "suivre, suivi": "to follow/followed",
+      "je suis": "I am/I follow",
+      "la tournée": "tour",
+      "la voix": "voice"
+    }
+  },
+   
+   // ===================================================
+  // Theme 3 - Travel + Tourism: Test 1
+  // ===================================================
+   
+  {
+    category: "Theme 3",
+    id: "travel-1",
+    title: "Travel + Tourism — Test 1",
+    description: "GCSE KO Higher vocabulary: travel and weather.",
+    words: {
+      "l'accueil": "welcome, reception",
+      "l'avion": "plane",
+      "le bateau": "boat",
+      "un billet": "a ticket",
+      "bouger": "to move",
+      "la chambre": "bedroom",
+      "conduire": "to drive",
+      "à l'étranger, étranger": "abroad, foreign",
+      "la frontière": "border",
+      "francophone": "French-speaking",
+      "le lit": "bedroom",
+      "la mer": "sea",
+      "le pays": "country",
+      "la piscine": "swimming pool",
+      "le séjour": "stay",
+      "la valise": "suitcase",
+      "voler, le vol": "to fly/steal, flight/theft",
+      "la voiture": "car",
+      "voyager, le voyage": "to travel, journey",
+      "la vue": "view",
+      "le temps, la météo": "weather",
+      "il fait beau": "the weather is nice",
+      "il fait chaud": "the weather is hot",
+      "il fait froid": "the weather is cold",
+      "le brouillard": "fog, mist, haze",
+      "le ciel": "sky",
+      "la neige": "snow",
+      "la pluie, il pleut": "rain, it's raining",
+      "le soleil": "sun, sunny",
+      "le vent": "wind"
+    }
+  },
+
+   // ===================================================
+  // Theme 3 - Media + Technology: Test 1
+  // ===================================================
+   
+  {
+    category: "Theme 3",
+    id: "media-1",
+    title: "Media + Technology — Test 1",
+    description: "GCSE KO Higher vocabulary: entertainment and media.",
+    words: {
+      "acteur": "actor",
+      "affiche": "poster",
+      "apprendre à jouer": "to learn to play",
+      "le billet": "ticket",
+      "bruyant(e), bruit": "noisy, noise",
+      "célèbre": "famous",
+      "la chanson": "song",
+      "chanter": "to sing",
+      "chanteur, chanteuse": "singer",
+      "commencer": "to start",
+      "disponible": "available",
+      "la durée": "length, duration",
+      "l'écran": "screen",
+      "l'émission": "TV programme",
+      "entendre": "to hear",
+      "enregistrer": "to record, to save",
+      "le film d'amour": "love film",
+      "la fin": "the end",
+      "fort(e)": "loud",
+      "le genre": "type, kind, sort",
+      "l'histoire": "story",
+      "les paroles": "lyrics",
+      "la pièce": "piece, room, play",
+      "le personnage": "character",
+      "la publicité": "advert",
+      "regarder": "to watch",
+      "la scène": "stage, scene",
+      "la série": "TV series",
+      "le spectacle": "show, performance",
+      "voir": "to see"
+    }
+  },
+
+   // ===================================================
+  // Theme 3 - Media + Technology: Test 2
+  // ===================================================
+   
+  {
+    category: "Theme 3",
+    id: "media-2",
+    title: "Media + Technology — Test 2",
+    description: "GCSE KO Higher vocabulary: digital technology and online safety.",
+    words: {
+      "l'appareil": "device",
+      "l'appli": "app",
+      "chatter, tchatter": "to chat online",
+      "chercher": "to search, to look for",
+      "la clé": "key",
+      "cliquer": "to click",
+      "l'écran": "screen",
+      "en ligne": "online",
+      "envoyer": "to send",
+      "faire attention": "to be careful",
+      "faire des achats": "to shop",
+      "faire des recherches": "to do research",
+      "harceler, le harcèlement": "to bully, bullying",
+      "les jeux vidéos": "computer games",
+      "la vie privée": "private life",
+      "mettre en ligne": "to upload, to put online",
+      "le mot de passe": "password",
+      "nouveau, nouvelle": "new",
+      "l'ordinateur": "computer",
+      "l'outil": "tool",
+      "partager": "to share",
+      "portable": "mobile phone",
+      "la puissance": "power",
+      "recevoir": "to receive",
+      "les réseaux sociaux": "social networks, social media",
+      "s'inscrire": "to join",
+      "s'inquiéter, inquiétant": "to worry, worrying",
+      "sûr(e)": "safe, secure",
+      "télécharger": "to download",
+      "utiliser": "to use"
+    }
+  },
+
+   // ===================================================
+  // Theme 3 - Environment + Where People Live: Test 1
+  // ===================================================
+   
+  {
+    category: "Theme 3",
+    id: "environment-1",
+    title: "Environment + Where People Live — Test 1",
+    description: "GCSE KO Higher vocabulary: environmental issues and actions.",
+    words: {
+      "allumer": "to switch on, to light",
+      "augmenter": "to increase",
+      "l'attentat": "attack, assassination attempt",
+      "le bénévole": "volunteer",
+      "brûler": "to burn",
+      "diminuer": "to lower, decrease",
+      "la circulation": "traffic",
+      "la crise": "crisis",
+      "défendre": "to defend",
+      "fermer la fenêtre": "to close the window",
+      "la guerre": "war",
+      "jeter": "to throw",
+      "la loi": "law",
+      "la lumière": "the light",
+      "lutter, la lutte": "to fight, fight, struggle",
+      "manifester": "to protest",
+      "menacer, menace": "to threaten, threat",
+      "le monde, mondial(e)": "world, worldwide, global",
+      "la paix": "peace",
+      "pauvre, la pauvreté": "poor, poverty",
+      "la poubelle": "bin",
+      "protéger": "to protect",
+      "la puissance, puissant": "power, powerful",
+      "le réchauffement": "warming",
+      "la ville": "town, city"
+    }
+  },
+
+   // ===================================================
+  // Theme 3 - Environment + Where People Live: Test 2
+  // ===================================================
+   
+  {
+    category: "Theme 3",
+    id: "environment-2",
+    title: "Environment + Where People Live — Test 2",
+    description: "GCSE KO Higher vocabulary: places and the environment.",
+    words: {
+      "l'arbre": "tree",
+      "le bâtiment": "building",
+      "la bibliothèque": "library",
+      "la banlieue": "suburbs",
+      "le bois, la forêt": "wood, forest",
+      "la boulangerie": "bakery",
+      "le bureau": "office",
+      "le centre commercial": "shopping centre",
+      "le champ": "field",
+      "le chemin": "path, way",
+      "la côte": "coast",
+      "dehors": "outside",
+      "l'espace": "space",
+      "la fleur": "flower",
+      "la gare": "train station",
+      "l'hôpital, les hôpitaux": "hospital, hospitals",
+      "l'île": "island",
+      "le magasin": "shop",
+      "le marché": "market",
+      "la montagne": "mountain",
+      "le paysage": "landscape, scenery",
+      "la plage": "beach",
+      "le pont": "bridge",
+      "la route": "road",
+      "la rue": "street",
+      "l'usine": "factory",
+      "nord, sud": "North, South",
+      "est, ouest": "East, West",
+      "occidental": "western"
+    }
+  },
+   
+   // ===================================================
+  // Theme 3 - Environment + Where People Live: Test 3
+  // ===================================================
+   
+  {
+    category: "Theme 3",
+    id: "environment-3",
+    title: "Environment + Where People Live — Test 3",
+    description: "GCSE KO Higher vocabulary: home and neighbourhood.",
+    words: {
+      "l'abri": "shelter",
+      "la boîte": "box",
+      "la chaise": "chair",
+      "la fenêtre": "window",
+      "habiter": "to live",
+      "le logement": "accommodation",
+      "la maison": "house",
+      "le mur": "wall",
+      "la pièce": "room",
+      "la porte": "door",
+      "la poubelle": "bin",
+      "le quartier": "area",
+      "quitter": "to leave",
+      "ranger": "to tidy",
+      "la salle à manger": "dining room",
+      "la salle de bains": "bathroom",
+      "le salon": "lounge",
+      "le siège": "seat",
+      "le sol": "floor, ground",
+      "la sortie": "exit",
+      "vide": "empty",
+      "vivre": "to live",
+      "voisin(e)": "neighbour"
+    }
+  },
+   
 ];
