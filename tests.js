@@ -12,6 +12,152 @@
 
 const TESTS = [
 
+   // ===================================================
+  // Core Vocabulary: TEST A — TIME PHRASES
+  // ===================================================
+
+  {
+    category: "Core Vocabulary",
+    id: "core-vocabulary-a",
+    title: "Test A - Time Phrases",
+    description: "Days, dates, months, seasons and time phrases.",
+    words: {
+      "un jour / une journée": "a day",
+      "une nuit": "a night",
+      "une semaine": "a week",
+      "un mois": "a month",
+      "un an / une année": "a year",
+      "dernier / dernière": "last",
+      "prochain / prochaine": "next",
+      "un siècle": "a century",
+      "quotidien": "daily",
+      "lundi": "Monday",
+      "mardi": "Tuesday",
+      "mercredi": "Wednesday",
+      "jeudi": "Thursday",
+      "vendredi": "Friday",
+      "samedi": "Saturday",
+      "dimanche": "Sunday",
+      "janvier": "January",
+      "février": "February",
+      "mars": "March",
+      "avril": "April",
+      "mai": "May",
+      "juin": "June",
+      "juillet": "July",
+      "août": "August",
+      "septembre": "September",
+      "octobre": "October",
+      "novembre": "November",
+      "décembre": "December",
+      "l'été": "summer",
+      "l'hiver": "winter",
+      "le printemps": "spring",
+      "l'automne": "autumn"
+    }
+  },
+
+  // ===================================================
+  // Core Vocabulary: TEST B — NUMBERS
+  // ===================================================
+
+  {
+    category: "Core Vocabulary",
+    id: "core-vocabulary-b",
+    title: "Test B - Numbers",
+    description: "French numbers and number vocabulary.",
+    words: {
+      "nombre": "number",
+      "chiffre": "figure/number",
+      "six": "six",
+      "trois": "three",
+      "quinze": "fifteen",
+      "dix": "ten",
+      "vingt-deux": "twenty two",
+      "huit": "eight",
+      "un": "one",
+      "dix-sept": "seventeen",
+      "quarante": "forty",
+      "douze": "twelve",
+      "soixante": "sixty",
+      "dix-huit": "eighteen",
+      "quatorze": "fourteen",
+      "deux": "two",
+      "treize": "thirteen",
+      "quatre-vingts": "eighty",
+      "sept": "seven",
+      "dix-neuf": "nineteen",
+      "cinquante": "fifty",
+      "neuf": "nine",
+      "cent": "hundred",
+      "quatre": "four",
+      "vingt-et-un": "twenty one",
+      "soixante-dix": "seventy",
+      "trente": "thirty",
+      "onze": "eleven",
+      "vingt": "twenty",
+      "quatre-vingt-dix": "ninety",
+      "cinq": "five",
+      "seize": "sixteen"
+    }
+  },
+
+  // ===================================================
+  // Core Vocabulary: TEST C — NUMBERS
+  // ===================================================
+
+  {
+    category: "Core Vocabulary",
+    id: "core-vocabulary-c",
+    title: "Test C - Numbers",
+    description: "Larger numbers and number expressions.",
+    words: {
+      "quatre-vingt-un": "eighty one",
+      "soixante-douze": "seventy two",
+      "cent cinquante": "one hundred and fifty",
+      "soixante-dix-huit": "seventy eight",
+      "mille": "one thousand",
+      "soixante-et-un": "sixty one",
+      "cent mille": "one hundred thousand",
+      "cinq cents": "five hundred",
+      "quatre-vingt-onze": "ninety one",
+      "douze": "twelve",
+      "soixante et onze": "seventy one",
+      "quatre-vingt-dix-huit": "ninety eight",
+      "six cent vingt-cinq": "six hundred and twenty five"
+    }
+  },
+
+  // ===================================================
+  // Core Vocabulary: TEST D — TIME
+  // ===================================================
+
+  {
+    category: "Core Vocabulary",
+    id: "core-vocabulary-d",
+    title: "Test D - Time",
+    description: "Telling the time and describing when things happen.",
+    words: {
+      "heure": "hour/time",
+      "il est huit heures": "it's 8 o'clock",
+      "à huit heures": "at 8 o'clock",
+      "à huit heures trente": "at 8:30",
+      "à huit heures vingt": "at 8:20",
+      "et demie": "half past",
+      "et quart": "quarter past",
+      "moins le quart": "quarter to",
+      "midi": "midday/noon",
+      "minuit": "midnight",
+      "minute": "minute",
+      "environ": "about/around",
+      "tôt": "early",
+      "tard": "late",
+      "en retard": "late",
+      "dès": "from/as soon as",
+      "vite/rapidement": "quickly",
+      "lentement": "slowly"
+    }
+  },
   
   // ===================================================
   // Essential Verbs: TEST A — ESSENTIAL VERBS
